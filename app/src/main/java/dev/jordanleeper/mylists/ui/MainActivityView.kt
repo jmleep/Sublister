@@ -19,14 +19,15 @@ import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
 import dev.jordanleeper.mylists.ui.list.ParentListItem
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityView(viewModel: ListViewModel) {
     val context = LocalContext.current
-    val list by viewModel.readAllData.observeAsState(initial = listOf())
+    val parentLists by viewModel.readAllData.observeAsState(initial = listOf())
 
-    val sortedList = list.sortedBy { it.parentList.isComplete }
+//    val sortedList = list.sortedBy { it.parentList.isComplete }
 
     MyListsTheme {
         // A surface container using the 'background' color from the theme
@@ -37,7 +38,15 @@ fun MainActivityView(viewModel: ListViewModel) {
             )
         }, floatingActionButton = {
             AddListFloatingActionButton {
-                viewModel.addList(ParentList(0, "test list", Color.Yellow.toArgb(), false))
+                viewModel.addList(
+                    ParentList(
+                        0,
+                        "test list ${parentLists.size + 1}",
+                        Color.Yellow.toArgb(),
+                        false,
+                        Date().time
+                    )
+                )
                 Toast.makeText(context, "clicked add list", Toast.LENGTH_LONG).show()
             }
         }, content = { paddingValues ->
@@ -51,7 +60,7 @@ fun MainActivityView(viewModel: ListViewModel) {
                     Modifier
                         .fillMaxSize()
                 ) {
-                    items(sortedList, key = { it.parentList.id }) { it ->
+                    items(parentLists, key = { it.parentList.id }) { it ->
                         ParentListItem(item = it, viewModel)
                     }
                 }

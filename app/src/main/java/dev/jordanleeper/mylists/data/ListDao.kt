@@ -9,7 +9,7 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addList(parentList: ParentList)
 
-    @Query("SELECT * FROM list ORDER BY id ASC")
+    @Query("SELECT * FROM list ORDER BY isComplete ASC, dateCreated DESC")
     fun getAllLists(): LiveData<List<ParentListWithSubLists>>
 
     @Delete

@@ -8,7 +8,9 @@ data class ParentList(
     var id: Int,
     var name: String? = "",
     var color: Int? = 0,
-    var isComplete: Boolean = false
+    var isComplete: Boolean = false,
+    @TypeConverters(Converters::class)
+    var dateCreated: Long?
 )
 
 @Entity(
@@ -26,14 +28,15 @@ data class SubList(
     var name: String? = "",
     @ColumnInfo(index = true)
     var parentList: String? = "",
-    var isComplete: Boolean = false
+    var isComplete: Boolean = false,
+    var dateCreated: Long?
 )
 
 data class ParentListWithSubLists(
     @Embedded
     val parentList: ParentList,
     @Relation(parentColumn = "id", entityColumn = "parentList")
-    val subLists: List<SubList>
+    val subLists: List<SubList>,
 )
 
 @Entity(tableName = "item")
@@ -41,6 +44,7 @@ data class Item(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = 0,
     var name: String? = "",
-    var isComplete: Boolean = false
+    var isComplete: Boolean = false,
+    var dateCreated: Long?
 )
 
