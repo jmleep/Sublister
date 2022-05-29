@@ -6,6 +6,10 @@ class ListRepository(private val listDao: ListDao) {
 
     val readAllData: LiveData<List<ParentListWithSubLists>> = listDao.getAllLists()
 
+    fun getParentListById(id: Int): LiveData<ParentListWithSubLists> {
+        return listDao.getParentListById(id)
+    }
+
     fun addList(parentList: ParentList) {
         listDao.addList(parentList)
     }

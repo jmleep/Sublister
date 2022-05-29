@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.jordanleeper.mylists.data.ListViewModel
+import dev.jordanleeper.mylists.data.MainActivityViewModel
 import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.theme.Delete
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
@@ -24,7 +24,7 @@ import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListItemSwipeToDismiss(
-    viewModel: ListViewModel,
+    viewModel: MainActivityViewModel,
     item: ParentListWithSubLists,
     content: @Composable() () -> Unit
 ) {

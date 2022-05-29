@@ -2,48 +2,39 @@ package dev.jordanleeper.mylists.ui.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import dev.jordanleeper.mylists.data.ListViewModel
-import dev.jordanleeper.mylists.data.ParentList
-import dev.jordanleeper.mylists.ui.theme.MyBlue
-import dev.jordanleeper.mylists.ui.theme.MyRose
-import dev.jordanleeper.mylists.ui.theme.MyYellow
-import dev.jordanleeper.mylists.ui.theme.getColor
-import java.util.*
+import dev.jordanleeper.mylists.ui.button.ListColorButton
+import dev.jordanleeper.mylists.ui.theme.*
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddListDialog(showAddListDialog: MutableState<Boolean>, viewModel: ListViewModel) {
+fun AddListDialog(
+    showAddListDialog: MutableState<Boolean>,
+    addNewList: (newListName: String, newListColor: String, myTextColor: String) -> Unit
+) {
     var newListName by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
-    val keyboard = LocalSoftwareKeyboardController.current
     var newListColor by remember { mutableStateOf(MyBlue) }
 
-    fun addNewList() {
-        viewModel.addList(
-            ParentList(
-                0, newListName, newListColor,
-                false,
-                Date().time
-            )
-        )
-        showAddListDialog.value = false
+    val myTextColor = when (newListColor) {
+        MyBlue -> onMyColorTextWhite
+        else -> onMyColorTextBlack
+    }
+
+    fun resetDialogFields() {
         newListName = ""
+        newListColor = MyBlue
     }
 
     if (showAddListDialog.value) {
@@ -66,7 +57,14 @@ fun AddListDialog(showAddListDialog: MutableState<Boolean>, viewModel: ListViewM
                                 .focusRequester(focusRequester),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                             keyboardActions = KeyboardActions(
-                                onDone = { addNewList() }
+                                onDone = {
+                                    addNewList(
+                                        newListName,
+                                        newListColor,
+                                        myTextColor
+                                    )
+                                    resetDialogFields()
+                                }
                             ),
                             colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         )
@@ -79,35 +77,33 @@ fun AddListDialog(showAddListDialog: MutableState<Boolean>, viewModel: ListViewM
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            FilledIconToggleButton(
-                                checked = newListColor == MyBlue,
-                                onCheckedChange = { newListColor = MyBlue }) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .clip(CircleShape)
-                                        .background(MyBlue.getColor())
-                                )
-                            }
-                            FilledIconToggleButton(
-                                checked = newListColor == MyRose,
-                                onCheckedChange = { newListColor = MyRose }) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .clip(CircleShape)
-                                        .background(MyRose.getColor())
-                                )
-                            }
-                            FilledIconToggleButton(
-                                checked = newListColor == MyYellow,
-                                onCheckedChange = { newListColor = MyYellow }) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(25.dp)
-                                        .clip(CircleShape)
-                                        .background(MyYellow.getColor())
-                                )
+                            ListColorButton(
+                                color = MyBlue,
+                                activeColor = newListColor,
+                                onChange = { newListColor = MyBlue }
+                            )
+                            ListColorButton(
+                                color = MyRose,
+                                activeColor = newListColor,
+                                onChange = { newListColor = MyRose }
+                            )
+                            ListColorButton(
+                                color = MyYellow,
+                                activeColor = newListColor,
+                                onChange = { newListColor = MyYellow }
+                            )
+                            ListColorButton(
+                                color = MySage,
+                                activeColor = newListColor,
+                                onChange = { newListColor = MySage }
+                            )
+                            ListColorButton(
+                                color = MyPeach,
+                                activeColor = newListColor,
+                                onChange = { newListColor = MyPeach }
+                            )
+                            ListColorButton(MyGrape, newListColor) {
+                                newListColor = MyGrape
                             }
                         }
                         Row(
@@ -131,7 +127,8 @@ fun AddListDialog(showAddListDialog: MutableState<Boolean>, viewModel: ListViewM
                             }
                             Button(
                                 onClick = {
-                                    addNewList()
+                                    addNewList(newListName, newListColor, myTextColor)
+                                    resetDialogFields()
                                 }, modifier = Modifier.padding(start = 15.dp)
                             ) {
                                 Text("Add")

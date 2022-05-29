@@ -17,4 +17,7 @@ interface ListDao {
 
     @Update
     fun updateParentList(list: ParentList)
+
+    @Query("SELECT * FROM list WHERE id = :id")
+    fun getParentListById(id: Int): LiveData<ParentListWithSubLists>
 }
