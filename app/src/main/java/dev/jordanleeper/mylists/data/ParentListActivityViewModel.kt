@@ -7,27 +7,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ListViewModel(application: Application) : AndroidViewModel(application) {
+class ParentListActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    val readAllData: LiveData<List<ParentListWithSubLists>>
     private val repository: ListRepository
 
     init {
         val listDao = AppDatabase.getDatabase(application).listDao()
         repository = ListRepository(listDao)
-        readAllData = repository.readAllData
     }
 
-    fun addList(list: ParentList) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addList(list)
-        }
-    }
-
-    fun deleteList(list: ParentList) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteParentList(list)
-        }
+    fun getParentList(id: Int): LiveData<ParentListWithSubLists> {
+        return repository.getParentListById(id)
     }
 
     fun updateParentList(list: ParentList) {

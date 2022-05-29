@@ -1,7 +1,6 @@
-package dev.jordanleeper.mylists.ui
+package dev.jordanleeper.mylists.ui.main
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TopAppBar
@@ -12,25 +11,30 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import dev.jordanleeper.mylists.data.ListViewModel
+import androidx.compose.ui.unit.sp
+import dev.jordanleeper.mylists.data.MainActivityViewModel
+import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
 import dev.jordanleeper.mylists.ui.dialog.AddListDialog
-import dev.jordanleeper.mylists.ui.list.ParentListItem
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainActivityView(viewModel: ListViewModel) {
-    val context = LocalContext.current
+fun MainActivityView(viewModel: MainActivityViewModel) {
     val parentLists by viewModel.readAllData.observeAsState(initial = listOf())
     val showAddListDialog = remember { mutableStateOf(false) }
 
     MyListsTheme {
         Scaffold(topBar = {
             TopAppBar(
-                title = { Text("My Lists") },
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) { Text("My Lists", fontSize = 30.sp) }
+                },
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             )
         }, floatingActionButton = {
             AddListFloatingActionButton(showAddListDialog)
@@ -41,13 +45,27 @@ fun MainActivityView(viewModel: ListViewModel) {
                     .padding(paddingValues),
                 color = MaterialTheme.colorScheme.background
             ) {
-                AddListDialog(showAddListDialog, viewModel)
+                AddListDialog(
+                    showAddListDialog,
+                ) { newListName, newListColor, myTextColor ->
+                    viewModel.addList(
+                        ParentList(
+                            0,
+                            newListName,
+                            newListColor,
+                            myTextColor,
+                            false,
+                            Date().time
+                        )
+                    )
+                    showAddListDialog.value = false
+                }
                 LazyColumn(
                     Modifier
                         .fillMaxSize()
                 ) {
                     items(parentLists, key = { it.parentList.id }) { it ->
-                        ParentListItem(item = it, viewModel)
+                        MainListItem(item = it, viewModel)
                     }
                 }
             }
