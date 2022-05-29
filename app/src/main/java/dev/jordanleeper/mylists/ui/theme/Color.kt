@@ -13,3 +13,11 @@ val OnMarkCompleted = Color.White
 
 val Completed = Color(189, 195, 199)
 val OnCompleted = Color(127, 140, 141)
+
+const val MyYellow = "#FFBF65"
+const val MyRose = "#F7CAC9"
+const val MyBlue = "#59788E"
+
+fun String.getColor(): Color {
+    return Color(android.graphics.Color.parseColor(this))
+}

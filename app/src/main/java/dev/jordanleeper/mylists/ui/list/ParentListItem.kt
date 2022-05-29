@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,7 +15,9 @@ import dev.jordanleeper.mylists.data.ListViewModel
 import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
+import dev.jordanleeper.mylists.ui.theme.getColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParentListItem(item: ParentListWithSubLists, viewModel: ListViewModel) {
     ListItemSwipeToDismiss(viewModel = viewModel, item = item) {
@@ -25,19 +28,21 @@ fun ParentListItem(item: ParentListWithSubLists, viewModel: ListViewModel) {
 
         val boxBackground = when (item.parentList.isComplete) {
             true -> MaterialTheme.colorScheme.surfaceVariant
-            false -> MaterialTheme.colorScheme.surface
+            false -> item.parentList.color
+                .getColor()
+                .copy(0.5F)
         }
 
         Box(
             modifier = Modifier
                 .background(boxBackground)
-                .padding(25.dp)
-                .fillMaxWidth(),
-
-            ) {
+                .fillMaxWidth()
+        ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(25.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     item.parentList.name ?: "List",

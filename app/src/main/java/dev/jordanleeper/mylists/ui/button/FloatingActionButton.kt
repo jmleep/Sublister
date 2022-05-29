@@ -7,10 +7,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 
 @Composable
-fun AddListFloatingActionButton(onClick: () -> Unit) {
-    FloatingActionButton(onClick = onClick, containerColor = MaterialTheme.colorScheme.primary) {
+fun AddListFloatingActionButton(showAddListDialog: MutableState<Boolean>) {
+    FloatingActionButton(
+        onClick = { showAddListDialog.value = true },
+        containerColor = MaterialTheme.colorScheme.primary
+    ) {
         Icon(
             Icons.Filled.Add,
             "Add list",

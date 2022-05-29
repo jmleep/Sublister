@@ -34,7 +34,7 @@ fun ListItemSwipeToDismiss(
             viewModel.deleteList(item.parentList)
         }
         if (it == DismissValue.DismissedToEnd) {
-            item.parentList.isComplete = true
+            item.parentList.isComplete = !item.parentList.isComplete
             viewModel.updateParentList(item.parentList)
             shouldDismiss = false
         }

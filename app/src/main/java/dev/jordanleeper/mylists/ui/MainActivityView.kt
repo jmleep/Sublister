@@ -1,6 +1,5 @@
 package dev.jordanleeper.mylists.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,45 +9,31 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import dev.jordanleeper.mylists.data.ListViewModel
-import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
+import dev.jordanleeper.mylists.ui.dialog.AddListDialog
 import dev.jordanleeper.mylists.ui.list.ParentListItem
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityView(viewModel: ListViewModel) {
     val context = LocalContext.current
     val parentLists by viewModel.readAllData.observeAsState(initial = listOf())
-
-//    val sortedList = list.sortedBy { it.parentList.isComplete }
+    val showAddListDialog = remember { mutableStateOf(false) }
 
     MyListsTheme {
-        // A surface container using the 'background' color from the theme
         Scaffold(topBar = {
             TopAppBar(
                 title = { Text("My Lists") },
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer
             )
         }, floatingActionButton = {
-            AddListFloatingActionButton {
-                viewModel.addList(
-                    ParentList(
-                        0,
-                        "test list ${parentLists.size + 1}",
-                        Color.Yellow.toArgb(),
-                        false,
-                        Date().time
-                    )
-                )
-                Toast.makeText(context, "clicked add list", Toast.LENGTH_LONG).show()
-            }
+            AddListFloatingActionButton(showAddListDialog)
         }, content = { paddingValues ->
             Surface(
                 modifier = Modifier
@@ -56,6 +41,7 @@ fun MainActivityView(viewModel: ListViewModel) {
                     .padding(paddingValues),
                 color = MaterialTheme.colorScheme.background
             ) {
+                AddListDialog(showAddListDialog, viewModel)
                 LazyColumn(
                     Modifier
                         .fillMaxSize()

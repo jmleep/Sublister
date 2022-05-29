@@ -7,7 +7,7 @@ data class ParentList(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var name: String? = "",
-    var color: Int? = 0,
+    var color: String = "#000000",
     var isComplete: Boolean = false,
     @TypeConverters(Converters::class)
     var dateCreated: Long?
