@@ -20,7 +20,7 @@ class ParentListActivityViewModel(application: Application) : AndroidViewModel(a
         return repository.getParentListById(id)
     }
 
-    suspend fun getSubListsByParentId(id: Int): List<SubList> {
+    fun getSubListsByParentId(id: Int): LiveData<List<SubList>> {
         return repository.getSubListsByParentId(id)
     }
 

@@ -5,13 +5,12 @@ import androidx.lifecycle.LiveData
 class ListRepository(private val listDao: ListDao) {
 
     val readAllData: LiveData<List<ParentListWithSubLists>> = listDao.getAllLists()
-    val readAllParentList: LiveData<List<ParentList>> = listDao.getAllParentLists()
 
     fun getParentListById(id: Int): LiveData<ParentList> {
         return listDao.getParentListById(id)
     }
 
-    suspend fun getSubListsByParentId(id: Int): List<SubList> {
+    fun getSubListsByParentId(id: Int): LiveData<List<SubList>> {
         return listDao.getSubListsByParentId(id)
     }
 

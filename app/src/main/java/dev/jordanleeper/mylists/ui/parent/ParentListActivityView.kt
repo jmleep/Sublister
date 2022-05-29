@@ -2,6 +2,9 @@ package dev.jordanleeper.mylists.ui.parent
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,8 +30,8 @@ import java.util.*
 @Composable
 fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
     val parentList by viewModel.getParentList(id).observeAsState()
-//    val subLists by viewModel.getSubListsByParentId(parentList?.id ?: 0)
-//        .observeAsState(initial = listOf())
+    val subLists by viewModel.getSubListsByParentId(id).observeAsState(initial = listOf())
+
     val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
 
     val showAddListDialog = remember { mutableStateOf(false) }
@@ -60,11 +63,11 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                         .padding(paddingValues),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    LazyColumn() {
-//                        items(subLists, key = { it.id }) {
-//                            ParentListItem(viewModel = viewModel, subList = it)
-//                        }
-//                    }
+                    LazyColumn() {
+                        items(subLists, key = { it.hashCode() }) {
+                            ParentListItem(viewModel = viewModel, subList = it)
+                        }
+                    }
                 }
                 AddEditListDialog(
                     showAddListDialog,

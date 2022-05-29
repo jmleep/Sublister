@@ -27,8 +27,10 @@ fun ParentListItem(viewModel: ParentListActivityViewModel, subList: SubList) {
             viewModel.deleteSubList(subList)
         }
         if (it == DismissValue.DismissedToEnd) {
-            subList.isComplete = !subList.isComplete
-            viewModel.updateSubList(subList)
+            val updatedSubList = subList.copy()
+            updatedSubList.isComplete = !subList.isComplete
+
+            viewModel.updateSubList(updatedSubList)
             shouldDismiss = false
         }
         shouldDismiss
@@ -36,7 +38,6 @@ fun ParentListItem(viewModel: ParentListActivityViewModel, subList: SubList) {
         val textColor = when (subList.isComplete) {
             true -> MaterialTheme.colorScheme.onSurfaceVariant
             false -> subList.textColor.getColor()
-
         }
 
         val boxBackground = when (subList.isComplete) {

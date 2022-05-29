@@ -25,7 +25,7 @@ interface ListDao {
     fun getParentListById(id: Int): LiveData<ParentList>
 
     @Query("SELECT * FROM sublist WHERE parentListId = :id ORDER BY isComplete ASC, dateCreated DESC")
-    suspend fun getSubListsByParentId(id: Int): List<SubList>
+    fun getSubListsByParentId(id: Int): LiveData<List<SubList>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addSubList(list: SubList)
