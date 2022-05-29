@@ -14,9 +14,9 @@ import dev.jordanleeper.mylists.ui.theme.getColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListColorButton(color: String, activeColor: String, onChange: (Boolean) -> Unit) {
+fun ListColorButton(color: String, isChecked: Boolean, onChange: (Boolean) -> Unit) {
     FilledIconToggleButton(
-        checked = activeColor == color,
+        checked = isChecked,
         onCheckedChange = onChange
     ) {
         Box(

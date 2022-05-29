@@ -6,16 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<ParentListWithSubLists>>
+    val readAllParentLists: LiveData<List<ParentList>>
     private val repository: ListRepository
+
 
     init {
         val listDao = AppDatabase.getDatabase(application).listDao()
         repository = ListRepository(listDao)
         readAllData = repository.readAllData
+        readAllParentLists = repository.readAllParentList
     }
 
     fun addList(list: ParentList) {
@@ -34,5 +38,12 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateParentList(list)
         }
+    }
+
+    suspend fun getParentSubLists(id: Int): List<SubList> {
+        val list = withContext(Dispatchers.IO) {
+            repository.getSubListsByParentId(id)
+        }
+        return list
     }
 }

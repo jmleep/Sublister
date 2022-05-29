@@ -9,7 +9,7 @@ data class ParentList(
     var name: String? = "",
     var color: String = "#FFFFFF",
     var textColor: String = "#000000",
-    var isComplete: Boolean = false,
+    var isComplete: Boolean,
     @TypeConverters(Converters::class)
     var dateCreated: Long?
 )
@@ -31,7 +31,7 @@ data class SubList(
     var name: String? = "",
     var color: String = "#FFFFFF",
     var textColor: String = "#000000",
-    var isComplete: Boolean = false,
+    var isComplete: Boolean,
     var dateCreated: Long?
 )
 
@@ -60,4 +60,12 @@ data class Item(
     var isComplete: Boolean = false,
     var dateCreated: Long?
 )
+
+data class SubListWithItems(
+    @Embedded
+    val subList: SubList,
+    @Relation(parentColumn = "id", entityColumn = "subListId")
+    val items: List<Item>,
+)
+
 

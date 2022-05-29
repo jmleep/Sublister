@@ -16,35 +16,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.jordanleeper.mylists.data.MainActivityViewModel
-import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.theme.Delete
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListItemSwipeToDismiss(
-    viewModel: MainActivityViewModel,
-    item: ParentListWithSubLists,
+    onSwipe: (DismissValue) -> Boolean,
     content: @Composable() () -> Unit
 ) {
-    val dismissState = rememberDismissState(confirmStateChange = {
-        var shouldDismiss = true
-        if (it == DismissValue.DismissedToStart) {
-            viewModel.deleteList(item.parentList)
-        }
-        if (it == DismissValue.DismissedToEnd) {
-            item.parentList.isComplete = !item.parentList.isComplete
-            viewModel.updateParentList(item.parentList)
-            shouldDismiss = false
-        }
-        shouldDismiss
-    })
+    val dismissState = rememberDismissState(confirmStateChange = { onSwipe(it) })
 
     SwipeToDismiss(
         state = dismissState,
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
-        dismissThresholds = { FractionalThreshold(0.25f) },
+        dismissThresholds = { FractionalThreshold(0.40f) },
         background = {
             val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
             val color by animateColorAsState(

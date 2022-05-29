@@ -15,35 +15,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
-import dev.jordanleeper.mylists.ui.dialog.AddListDialog
+import dev.jordanleeper.mylists.data.SubList
+import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
+import dev.jordanleeper.mylists.ui.theme.Palette
 import dev.jordanleeper.mylists.ui.theme.getColor
+import dev.jordanleeper.mylists.ui.theme.getPalette
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
-    val item by viewModel.getParentList(id).observeAsState()
-    val itemTextColor = item?.parentList?.textColor?.getColor() ?: Color.White
+    val parentList by viewModel.getParentList(id).observeAsState()
+//    val subLists by viewModel.getSubListsByParentId(parentList?.id ?: 0)
+//        .observeAsState(initial = listOf())
+    val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
 
     val showAddListDialog = remember { mutableStateOf(false) }
+    val palette = parentList?.color?.getPalette() ?: Palette()
 
     MyListsTheme {
         Scaffold(
             topBar = {
                 TopAppBar(
                     actions = {
-                        IconButton(onClick = { println("test") }) {
+                        IconButton(onClick = { showAddListDialog.value = true }) {
                             Icon(Icons.Default.Add, "Add Sublist", tint = itemTextColor)
                         }
                     },
                     title = {
                         Text(
-                            item?.parentList?.name ?: "Test",
+                            parentList?.name ?: "Test",
                             fontSize = 30.sp,
                             color = itemTextColor
                         )
                     },
-                    backgroundColor = item?.parentList?.color?.getColor() ?: Color.Black
+                    backgroundColor = parentList?.color?.getColor() ?: Color.Black
                 )
             },
             content = { paddingValues ->
@@ -53,12 +60,28 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                         .padding(paddingValues),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Text("ASDF")
+//                    LazyColumn() {
+//                        items(subLists, key = { it.id }) {
+//                            ParentListItem(viewModel = viewModel, subList = it)
+//                        }
+//                    }
                 }
-                AddListDialog(
+                AddEditListDialog(
                     showAddListDialog,
+                    label = "Add SubList",
+                    colors = palette.colors,
+                    textColors = palette.textColors
                 ) { newListName, newListColor, myTextColor ->
-                    println("test")
+                    viewModel.addSubList(
+                        SubList(
+                            name = newListName,
+                            color = newListColor,
+                            textColor = myTextColor,
+                            parentListId = parentList?.id ?: 0,
+                            dateCreated = Date().time,
+                            isComplete = false
+                        )
+                    )
                     showAddListDialog.value = false
                 }
             })

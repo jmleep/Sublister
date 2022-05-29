@@ -15,14 +15,16 @@ import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
 import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
-import dev.jordanleeper.mylists.ui.dialog.AddListDialog
+import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
+import dev.jordanleeper.mylists.ui.theme.ParentListItemPalette
+import dev.jordanleeper.mylists.ui.theme.ParentListItemPaletteText
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityView(viewModel: MainActivityViewModel) {
-    val parentLists by viewModel.readAllData.observeAsState(initial = listOf())
+    val parentListWithSubLists by viewModel.readAllData.observeAsState(initial = listOf())
     val showAddListDialog = remember { mutableStateOf(false) }
 
     MyListsTheme {
@@ -39,35 +41,44 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
         }, floatingActionButton = {
             AddListFloatingActionButton(showAddListDialog)
         }, content = { paddingValues ->
+
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
                 color = MaterialTheme.colorScheme.background
             ) {
-                AddListDialog(
+                AddEditListDialog(
                     showAddListDialog,
+                    label = "Add List",
+                    colors = ParentListItemPalette,
+                    textColors = ParentListItemPaletteText
                 ) { newListName, newListColor, myTextColor ->
                     viewModel.addList(
                         ParentList(
-                            0,
-                            newListName,
-                            newListColor,
-                            myTextColor,
-                            false,
-                            Date().time
+                            name = newListName,
+                            color = newListColor,
+                            textColor = myTextColor,
+                            isComplete = false,
+                            dateCreated = Date().time
                         )
                     )
                     showAddListDialog.value = false
                 }
+
                 LazyColumn(
                     Modifier
                         .fillMaxSize()
                 ) {
-                    items(parentLists, key = { it.parentList.id }) { it ->
-                        MainListItem(item = it, viewModel)
+
+                    items(
+                        parentListWithSubLists,
+                        key = { it.parentList.hashCode() }) { it ->
+                        MainListItem(parentListWithSubLists, parentList = it.parentList, viewModel)
                     }
+
                 }
+
             }
         }, containerColor = MaterialTheme.colorScheme.background)
     }

@@ -15,27 +15,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import dev.jordanleeper.mylists.ui.button.ListColorButton
-import dev.jordanleeper.mylists.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddListDialog(
+fun AddEditListDialog(
     showAddListDialog: MutableState<Boolean>,
+    label: String,
+    colors: List<String>,
+    textColors: List<String>,
     addNewList: (newListName: String, newListColor: String, myTextColor: String) -> Unit
 ) {
     var newListName by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
-    var newListColor by remember { mutableStateOf(MyBlue) }
-
-    val myTextColor = when (newListColor) {
-        MyBlue -> onMyColorTextWhite
-        else -> onMyColorTextBlack
-    }
+    var newListColorIndex by remember { mutableStateOf(0) }
 
     fun resetDialogFields() {
         newListName = ""
-        newListColor = MyBlue
+        newListColorIndex = 0
     }
+
 
     if (showAddListDialog.value) {
         Dialog(
@@ -44,7 +42,7 @@ fun AddListDialog(
                 Card() {
                     Column(modifier = Modifier.padding(15.dp)) {
                         Text(
-                            "Add List",
+                            label,
                             modifier = Modifier
                                 .padding(bottom = 5.dp),
                             fontSize = 25.sp
@@ -60,8 +58,8 @@ fun AddListDialog(
                                 onDone = {
                                     addNewList(
                                         newListName,
-                                        newListColor,
-                                        myTextColor
+                                        colors[newListColorIndex],
+                                        textColors[newListColorIndex]
                                     )
                                     resetDialogFields()
                                 }
@@ -77,33 +75,12 @@ fun AddListDialog(
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            ListColorButton(
-                                color = MyBlue,
-                                activeColor = newListColor,
-                                onChange = { newListColor = MyBlue }
-                            )
-                            ListColorButton(
-                                color = MyRose,
-                                activeColor = newListColor,
-                                onChange = { newListColor = MyRose }
-                            )
-                            ListColorButton(
-                                color = MyYellow,
-                                activeColor = newListColor,
-                                onChange = { newListColor = MyYellow }
-                            )
-                            ListColorButton(
-                                color = MySage,
-                                activeColor = newListColor,
-                                onChange = { newListColor = MySage }
-                            )
-                            ListColorButton(
-                                color = MyPeach,
-                                activeColor = newListColor,
-                                onChange = { newListColor = MyPeach }
-                            )
-                            ListColorButton(MyGrape, newListColor) {
-                                newListColor = MyGrape
+                            colors.forEachIndexed() { index, color ->
+                                ListColorButton(
+                                    color = color,
+                                    isChecked = newListColorIndex == index,
+                                    onChange = { newListColorIndex = index }
+                                )
                             }
                         }
                         Row(
@@ -127,7 +104,11 @@ fun AddListDialog(
                             }
                             Button(
                                 onClick = {
-                                    addNewList(newListName, newListColor, myTextColor)
+                                    addNewList(
+                                        newListName,
+                                        colors[newListColorIndex],
+                                        textColors[newListColorIndex]
+                                    )
                                     resetDialogFields()
                                 }, modifier = Modifier.padding(start = 15.dp)
                             ) {
