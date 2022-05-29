@@ -74,7 +74,7 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     items(
                         parentListWithSubLists,
                         key = { it.parentList.hashCode() }) { it ->
-                        MainListItem(parentListWithSubLists, parentList = it.parentList, viewModel)
+                        MainListItem(it, viewModel)
                     }
 
                 }

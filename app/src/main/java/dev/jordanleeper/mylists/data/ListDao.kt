@@ -18,15 +18,6 @@ interface ListDao {
     @Delete
     fun deleteParentList(list: ParentList)
 
-    @Query("UPDATE list SET name = :name, color = :color, textColor = :textColor, isComplete = :isComplete WHERE id = :id")
-    fun updateParentList(
-        id: Int,
-        name: String,
-        color: String,
-        textColor: String,
-        isComplete: Boolean
-    )
-
     @Update
     fun updateParentList(list: ParentList)
 

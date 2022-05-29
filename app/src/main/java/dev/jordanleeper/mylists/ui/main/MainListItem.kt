@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
-import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.parent.ParentListActivity
@@ -30,52 +29,46 @@ import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
 import dev.jordanleeper.mylists.ui.theme.parentListPalette
-import kotlinx.coroutines.runBlocking
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainListItem(
-    allLists: List<ParentListWithSubLists>,
-    parentList: ParentList,
+    parentListWithSubLists: ParentListWithSubLists,
     viewModel: MainActivityViewModel
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val showEditListDialog = remember { mutableStateOf(false) }
 
-    val subLists = runBlocking {
-        viewModel.getParentSubLists(parentList.id)
-    }
-
     ListItemSwipeToDismiss(onSwipe = {
         var shouldDismiss = true
         if (it == DismissValue.DismissedToStart) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            viewModel.deleteList(parentList)
+            viewModel.deleteList(parentListWithSubLists.parentList)
         }
         if (it == DismissValue.DismissedToEnd) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            val newList = parentList.copy()
+            val newList = parentListWithSubLists.parentList.copy()
             newList.isComplete = !newList.isComplete
-            
+
             viewModel.updateParentList(newList)
             shouldDismiss = false
         }
         shouldDismiss
     }) {
-        val textColor = when (parentList.isComplete) {
+        val textColor = when (parentListWithSubLists.parentList.isComplete) {
             true -> MaterialTheme.colorScheme.onSurfaceVariant
-            false -> parentList.textColor.getColor()
+            false -> parentListWithSubLists.parentList.textColor.getColor()
 
         }
 
-        val boxBackground = when (parentList.isComplete) {
+        val boxBackground = when (parentListWithSubLists.parentList.isComplete) {
             true -> MaterialTheme.colorScheme.surfaceVariant
-            false -> parentList.color.getColor()
+            false -> parentListWithSubLists.parentList.color.getColor()
         }
 
         val fontWeight =
-            if (subLists.isNotEmpty()) FontWeight.Bold else FontWeight.Normal
+            if (parentListWithSubLists.subLists.isNotEmpty()) FontWeight.Bold else FontWeight.Normal
 
         Box(
             modifier = Modifier
@@ -88,7 +81,7 @@ fun MainListItem(
                             context,
                             ParentListActivity::class.java
                         )
-                        intent.putExtra("parentListId", parentList.id);
+                        intent.putExtra("parentListId", parentListWithSubLists.parentList.id);
                         context.startActivity(intent)
                     },
                     onLongClick = {
@@ -104,13 +97,13 @@ fun MainListItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    parentList.name ?: "List",
+                    parentListWithSubLists.parentList.name ?: "List",
                     color = textColor,
                     fontSize = 20.sp,
                     fontWeight = fontWeight
                 )
 
-                if (parentList.isComplete) {
+                if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                 }
             }
@@ -121,11 +114,12 @@ fun MainListItem(
             colors = parentListPalette.colors,
             textColors = parentListPalette.textColors
         ) { newListName, newListColor, myTextColor ->
-            parentList.name = newListName
-            parentList.color = newListColor
-            parentList.textColor = myTextColor
+            val editedList = parentListWithSubLists.parentList.copy()
+            editedList.name = newListName
+            editedList.color = newListColor
+            editedList.textColor = myTextColor
 
-            viewModel.updateParentList(parentList)
+            viewModel.updateParentList(editedList)
             showEditListDialog.value = false
         }
     }
