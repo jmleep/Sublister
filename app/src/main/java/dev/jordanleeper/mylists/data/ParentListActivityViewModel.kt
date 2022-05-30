@@ -51,4 +51,16 @@ class ParentListActivityViewModel(application: Application) : AndroidViewModel(a
             repository.addItem(item)
         }
     }
+
+    fun deleteItem(item: Item) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteItem(item)
+        }
+    }
+
+    fun updateItem(updatedItem: Item) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateItem(updatedItem)
+        }
+    }
 }

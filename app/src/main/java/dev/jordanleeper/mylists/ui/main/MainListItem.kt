@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -24,11 +25,10 @@ import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
 import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
+import dev.jordanleeper.mylists.ui.parent.NumberOfItemsChip
 import dev.jordanleeper.mylists.ui.parent.ParentListActivity
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
-import dev.jordanleeper.mylists.ui.theme.MarkCompleted
-import dev.jordanleeper.mylists.ui.theme.getColor
-import dev.jordanleeper.mylists.ui.theme.parentListPalette
+import dev.jordanleeper.mylists.ui.theme.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -95,6 +95,7 @@ fun MainListItem(
                     .fillMaxWidth()
                     .padding(25.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     parentListWithSubLists.parentList.name ?: "List",
@@ -105,6 +106,12 @@ fun MainListItem(
 
                 if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
+                } else {
+                    NumberOfItemsChip(
+                        displayNumber = parentListWithSubLists.subLists.size.toString(),
+                        color = ItemColor,
+                        textColor = onItemColor
+                    )
                 }
             }
         }

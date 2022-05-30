@@ -45,4 +45,12 @@ class ListRepository(private val listDao: ListDao) {
     fun addItem(item: Item) {
         listDao.addItem(item)
     }
+
+    fun deleteItem(item: Item) {
+        listDao.deleteItem(item)
+    }
+
+    fun updateItem(updatedItem: Item) {
+        listDao.updateItem(updatedItem)
+    }
 }

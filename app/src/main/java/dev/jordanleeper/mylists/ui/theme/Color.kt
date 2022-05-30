@@ -14,6 +14,9 @@ val OnMarkCompleted = Color.White
 val Completed = Color(189, 195, 199)
 val OnCompleted = Color(127, 140, 141)
 
+val ItemColor = Color(188, 187, 187)
+val onItemColor = Color(0, 0, 0)
+
 const val White = "#FFFFFF"
 const val Black = "#000000"
 

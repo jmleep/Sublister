@@ -26,6 +26,7 @@ import dev.jordanleeper.mylists.data.Item
 import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.data.SubList
+import dev.jordanleeper.mylists.ui.item.ItemListItem
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
@@ -55,7 +56,7 @@ fun ParentListItem(
             shouldDismiss = false
         }
         shouldDismiss
-    }) {
+    }, isSwipingPrevented = isExpanded) {
         val textColor = when (subList.isComplete) {
             true -> MaterialTheme.colorScheme.onSurfaceVariant
             false -> subList.textColor.getColor()
@@ -91,10 +92,11 @@ fun ParentListItem(
                         if (subList.isComplete) {
                             Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                         } else {
-                            NumItemsButton(
+                            NumberOfItemsChip(
                                 isExpanded = isExpanded,
-                                parentList = parentList,
-                                items = items
+                                displayNumber = items.size.toString(),
+                                color = parentList.color.getColor(),
+                                textColor = parentList.textColor.getColor()
                             )
                         }
                     }
@@ -124,7 +126,7 @@ fun ParentListItem(
                     }
                     items.forEach {
                         Row() {
-                            Text("${it.name}")
+                            ItemListItem(item = it, viewModel)
                         }
                     }
                 }

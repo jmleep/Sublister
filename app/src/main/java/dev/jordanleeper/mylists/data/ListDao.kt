@@ -41,4 +41,10 @@ interface ListDao {
 
     @Insert
     fun addItem(item: Item)
+
+    @Delete
+    fun deleteItem(item: Item)
+
+    @Update
+    fun updateItem(updatedItem: Item)
 }
