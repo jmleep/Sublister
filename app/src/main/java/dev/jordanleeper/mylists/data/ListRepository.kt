@@ -37,4 +37,12 @@ class ListRepository(private val listDao: ListDao) {
     fun deleteSubList(list: SubList) {
         listDao.deleteSubList(list)
     }
+
+    fun getItemsBySubListId(id: Int): LiveData<List<Item>> {
+        return listDao.getItemsBySubListId(id)
+    }
+
+    fun addItem(item: Item) {
+        listDao.addItem(item)
+    }
 }

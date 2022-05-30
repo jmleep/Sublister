@@ -41,4 +41,14 @@ class ParentListActivityViewModel(application: Application) : AndroidViewModel(a
             repository.deleteSubList(list)
         }
     }
+
+    fun getItemsBySubListId(id: Int): LiveData<List<Item>> {
+        return repository.getItemsBySubListId(id)
+    }
+
+    fun addItem(item: Item) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addItem(item)
+        }
+    }
 }

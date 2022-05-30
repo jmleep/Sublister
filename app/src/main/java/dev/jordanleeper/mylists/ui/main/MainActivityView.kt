@@ -70,7 +70,6 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     Modifier
                         .fillMaxSize()
                 ) {
-
                     items(
                         parentListWithSubLists,
                         key = { it.parentList.hashCode() }) { it ->

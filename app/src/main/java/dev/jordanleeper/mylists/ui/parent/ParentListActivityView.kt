@@ -65,7 +65,11 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                 ) {
                     LazyColumn() {
                         items(subLists, key = { it.hashCode() }) {
-                            ParentListItem(viewModel = viewModel, subList = it)
+                            ParentListItem(
+                                viewModel = viewModel,
+                                parentList = parentList!!,
+                                subList = it
+                            )
                         }
                     }
                 }

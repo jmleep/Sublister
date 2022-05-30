@@ -61,11 +61,5 @@ data class Item(
     var dateCreated: Long?
 )
 
-data class SubListWithItems(
-    @Embedded
-    val subList: SubList,
-    @Relation(parentColumn = "id", entityColumn = "subListId")
-    val items: List<Item>,
-)
 
 
