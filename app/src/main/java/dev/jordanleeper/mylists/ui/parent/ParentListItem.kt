@@ -3,6 +3,8 @@ package dev.jordanleeper.mylists.ui.parent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
@@ -20,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.Item
@@ -39,7 +43,7 @@ fun ParentListItem(
     subList: SubList
 ) {
     val isExpanded = remember { mutableStateOf(false) }
-    val items by viewModel.getItemsBySubListId(subList.id).observeAsState(initial = listOf())
+    val itemsList by viewModel.getItemsBySubListId(subList.id).observeAsState(initial = listOf())
     val itemText = remember { mutableStateOf("") }
     val haptic = LocalHapticFeedback.current
 
@@ -57,20 +61,17 @@ fun ParentListItem(
         }
         shouldDismiss
     }, isSwipingPrevented = isExpanded) {
-        val textColor = when (subList.isComplete) {
-            true -> MaterialTheme.colorScheme.onSurfaceVariant
-            false -> subList.textColor.getColor()
+
+        val textStyle = when (subList.isComplete) {
+            true -> TextStyle(textDecoration = TextDecoration.LineThrough)
+            false -> TextStyle(textDecoration = TextDecoration.None)
         }
 
-        val boxBackground = when (subList.isComplete) {
-            true -> MaterialTheme.colorScheme.surfaceVariant
-            false -> subList.color.getColor()
-        }
         Box() {
             Column() {
                 Box(
                     modifier = Modifier
-                        .background(boxBackground)
+                        .background(subList.color.getColor())
                         .fillMaxWidth()
                         .clickable {
                             isExpanded.value = !isExpanded.value
@@ -85,8 +86,9 @@ fun ParentListItem(
                     ) {
                         Text(
                             subList.name ?: "List",
-                            color = textColor,
+                            color = subList.textColor.getColor(),
                             fontSize = 20.sp,
+                            style = textStyle
                         )
 
                         if (subList.isComplete) {
@@ -94,7 +96,7 @@ fun ParentListItem(
                         } else {
                             NumberOfItemsChip(
                                 isExpanded = isExpanded,
-                                displayNumber = items.size.toString(),
+                                displayNumber = itemsList.filter { !it.isComplete }.size.toString(),
                                 color = parentList.color.getColor(),
                                 textColor = parentList.textColor.getColor()
                             )
@@ -102,31 +104,51 @@ fun ParentListItem(
                     }
                 }
 
-                if (isExpanded.value) {
-                    Row {
-                        TextField(
-                            value = itemText.value,
-                            onValueChange = { itemText.value = it })
-                        Button(
-                            onClick = {
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                viewModel.addItem(
-                                    Item(
-                                        name = itemText.value,
-                                        subListId = subList.id,
-                                        dateCreated = Date().time
-                                    )
-                                )
-                                itemText.value = ""
 
+                if (isExpanded.value) {
+                    val height = (itemsList.size * 60) + 80
+                    LazyColumn(modifier = Modifier.height(height.dp)) {
+                        item {
+                            Row(
+                                modifier = Modifier
+                                    .height(80.dp)
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .padding(
+                                        top = 5.dp,
+                                        bottom = 5.dp,
+                                        start = 10.dp,
+                                        end = 10.dp
+                                    )
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TextField(
+                                    value = itemText.value,
+                                    onValueChange = { itemText.value = it })
+
+                                Button(
+                                    onClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        viewModel.addItem(
+                                            Item(
+                                                name = itemText.value,
+                                                subListId = subList.id,
+                                                dateCreated = Date().time
+                                            )
+                                        )
+                                        itemText.value = ""
+                                    }
+
+                                ) {
+                                    Text("Add")
+                                }
                             }
-                        ) {
-                            Text("Add")
                         }
-                    }
-                    items.forEach {
-                        Row() {
-                            ItemListItem(item = it, viewModel)
+                        items(itemsList, key = { it.hashCode() }) {
+                            Row() {
+                                ItemListItem(item = it, viewModel)
+                            }
                         }
                     }
                 }

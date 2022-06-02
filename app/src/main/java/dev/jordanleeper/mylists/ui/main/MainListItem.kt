@@ -9,7 +9,6 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,7 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
@@ -56,15 +57,9 @@ fun MainListItem(
         }
         shouldDismiss
     }) {
-        val textColor = when (parentListWithSubLists.parentList.isComplete) {
-            true -> MaterialTheme.colorScheme.onSurfaceVariant
-            false -> parentListWithSubLists.parentList.textColor.getColor()
-
-        }
-
-        val boxBackground = when (parentListWithSubLists.parentList.isComplete) {
-            true -> MaterialTheme.colorScheme.surfaceVariant
-            false -> parentListWithSubLists.parentList.color.getColor()
+        val textStyle = when (parentListWithSubLists.parentList.isComplete) {
+            true -> TextStyle(textDecoration = TextDecoration.LineThrough)
+            false -> TextStyle(textDecoration = TextDecoration.None)
         }
 
         val fontWeight =
@@ -72,7 +67,7 @@ fun MainListItem(
 
         Box(
             modifier = Modifier
-                .background(boxBackground)
+                .background(parentListWithSubLists.parentList.color.getColor())
                 .fillMaxWidth()
                 .combinedClickable(
                     onClick = {
@@ -99,16 +94,17 @@ fun MainListItem(
             ) {
                 Text(
                     parentListWithSubLists.parentList.name ?: "List",
-                    color = textColor,
+                    color = parentListWithSubLists.parentList.textColor.getColor(),
                     fontSize = 20.sp,
-                    fontWeight = fontWeight
+                    fontWeight = fontWeight,
+                    style = textStyle
                 )
 
                 if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                 } else {
                     NumberOfItemsChip(
-                        displayNumber = parentListWithSubLists.subLists.size.toString(),
+                        displayNumber = parentListWithSubLists.subLists.filter { !it.isComplete }.size.toString(),
                         color = ItemColor,
                         textColor = onItemColor
                     )

@@ -9,10 +9,10 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addList(parentList: ParentList)
 
-    @Query("SELECT * FROM list ORDER BY isComplete ASC, dateCreated DESC")
+    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
     fun getAllLists(): LiveData<List<ParentListWithSubLists>>
 
-    @Query("SELECT * FROM list ORDER BY isComplete ASC, dateCreated DESC")
+    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
     fun getAllParentLists(): LiveData<List<ParentList>>
 
     @Delete
@@ -24,7 +24,7 @@ interface ListDao {
     @Query("SELECT * FROM list WHERE id = :id")
     fun getParentListById(id: Int): LiveData<ParentList>
 
-    @Query("SELECT * FROM sublist WHERE parentListId = :id ORDER BY isComplete ASC, dateCreated DESC")
+    @Query("SELECT * FROM sublist WHERE parentListId = :id ORDER BY dateCreated DESC")
     fun getSubListsByParentId(id: Int): LiveData<List<SubList>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -36,7 +36,7 @@ interface ListDao {
     @Delete
     fun deleteSubList(list: SubList)
 
-    @Query("SELECT * FROM item WHERE subListId = :id ORDER BY isComplete ASC, dateCreated DESC")
+    @Query("SELECT * FROM item WHERE subListId = :id ORDER BY dateCreated DESC")
     fun getItemsBySubListId(id: Int): LiveData<List<Item>>
 
     @Insert
