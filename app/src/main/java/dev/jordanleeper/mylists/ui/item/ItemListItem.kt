@@ -52,7 +52,7 @@ fun ItemListItem(item: Item, viewModel: ParentListActivityViewModel) {
                 .height(20.dp)
         ) {
             Text(
-                "${item.name} ${item.id}",
+                "${item.name} ${item.position}",
                 color = MaterialTheme.colorScheme.onSurface,
                 style = textStyle
             )

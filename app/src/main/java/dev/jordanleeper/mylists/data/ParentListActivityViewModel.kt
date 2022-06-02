@@ -63,4 +63,10 @@ class ParentListActivityViewModel(application: Application) : AndroidViewModel(a
             repository.updateItem(updatedItem)
         }
     }
+
+    fun updateItems(updatedList: List<Item>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateItems(updatedList)
+        }
+    }
 }

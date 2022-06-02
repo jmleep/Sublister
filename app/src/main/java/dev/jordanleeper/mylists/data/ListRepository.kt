@@ -53,4 +53,8 @@ class ListRepository(private val listDao: ListDao) {
     fun updateItem(updatedItem: Item) {
         listDao.updateItem(updatedItem)
     }
+    
+    fun updateItems(updatedList: List<Item>) {
+        listDao.updateItems(updatedList)
+    }
 }

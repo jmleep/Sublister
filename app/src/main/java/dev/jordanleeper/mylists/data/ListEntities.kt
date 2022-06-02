@@ -58,7 +58,8 @@ data class Item(
     val subListId: Int? = 0,
     var name: String? = "",
     var isComplete: Boolean = false,
-    var dateCreated: Long?
+    var dateCreated: Long?,
+    var position: Int? = 0
 )
 
 

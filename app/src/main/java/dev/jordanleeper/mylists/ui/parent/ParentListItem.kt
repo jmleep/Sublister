@@ -1,5 +1,10 @@
 package dev.jordanleeper.mylists.ui.parent
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,13 +18,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
@@ -34,6 +37,10 @@ import dev.jordanleeper.mylists.ui.item.ItemListItem
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 import java.util.*
 
 @Composable
@@ -46,6 +53,25 @@ fun ParentListItem(
     val itemsList by viewModel.getItemsBySubListId(subList.id).observeAsState(initial = listOf())
     val itemText = remember { mutableStateOf("") }
     val haptic = LocalHapticFeedback.current
+
+    var temp = itemsList.toMutableStateList()
+
+    val state = rememberReorderableLazyListState(onMove = { from, to ->
+        var toIndex = to.index - 1
+        if (to.index < 0) toIndex = 0
+        if (to.index >= itemsList.size) toIndex = itemsList.size - 1
+
+        Collections.swap(temp, from.index - 1, toIndex)
+    }, onDragEnd = { from, to ->
+
+        val updatedList = temp.mapIndexed { index, item ->
+            val updateItem = item.copy()
+            updateItem.position = index
+            updateItem
+        }
+        println(updatedList)
+        viewModel.updateItems(updatedList)
+    })
 
     ListItemSwipeToDismiss(onSwipe = {
         var shouldDismiss = true
@@ -105,9 +131,17 @@ fun ParentListItem(
                 }
 
 
-                if (isExpanded.value) {
+                AnimatedVisibility(
+                    visible = isExpanded.value,
+                    enter = expandIn(animationSpec = tween(5000, easing = LinearOutSlowInEasing))
+                ) {
                     val height = (itemsList.size * 60) + 80
-                    LazyColumn(modifier = Modifier.height(height.dp)) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .reorderable(state)
+                            .height(height.dp),
+                        state = state.listState
+                    ) {
                         item {
                             Row(
                                 modifier = Modifier
@@ -134,7 +168,8 @@ fun ParentListItem(
                                             Item(
                                                 name = itemText.value,
                                                 subListId = subList.id,
-                                                dateCreated = Date().time
+                                                dateCreated = Date().time,
+                                                position = itemsList.size + 1
                                             )
                                         )
                                         itemText.value = ""
@@ -145,9 +180,17 @@ fun ParentListItem(
                                 }
                             }
                         }
-                        items(itemsList, key = { it.hashCode() }) {
-                            Row() {
-                                ItemListItem(item = it, viewModel)
+                        items(temp, key = { it.hashCode() }) { listItem ->
+                            ReorderableItem(state, key = listItem.hashCode()) { isDragging ->
+                                val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+
+                                Box(
+                                    modifier = Modifier
+                                        .shadow(elevation.value)
+                                        .detectReorderAfterLongPress(state)
+                                ) {
+                                    ItemListItem(item = listItem, viewModel)
+                                }
                             }
                         }
                     }
