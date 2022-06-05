@@ -24,6 +24,7 @@ import dev.jordanleeper.mylists.ui.listitem.ListItem
 import dev.jordanleeper.mylists.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.task.AddTaskButton
+import dev.jordanleeper.mylists.ui.task.TaskAdapter
 import dev.jordanleeper.mylists.ui.task.TaskRecyclerView
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
@@ -90,7 +91,11 @@ fun SubListItem(
                             subList = subList,
                             itemsList = itemsList
                         )
-                        TaskRecyclerView(items = itemsList)
+                        TaskRecyclerView(
+                            items = itemsList,
+                            viewModel,
+                            taskAdapter = TaskAdapter(itemsList, viewModel)
+                        )
                     }
                 }
             }
