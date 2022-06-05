@@ -4,32 +4,28 @@ import android.content.Intent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
 import dev.jordanleeper.mylists.data.ParentListWithSubLists
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
-import dev.jordanleeper.mylists.ui.parent.NumberOfItemsChip
+import dev.jordanleeper.mylists.ui.listitem.ListItem
+import dev.jordanleeper.mylists.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.mylists.ui.parent.ParentListActivity
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.*
@@ -88,31 +84,12 @@ fun MainListItem(
                     }
                 )
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+            ListItem(
+                color = parentListWithSubLists.parentList.color.getColor(),
+                label = parentListWithSubLists.parentList.name ?: "List",
+                style = textStyle,
+                fontWeight = fontWeight
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(5.dp)
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(parentListWithSubLists.parentList.color.getColor())
-                )
-
-                Box(modifier = Modifier.padding(start = 15.dp)) {
-                    Text(
-                        parentListWithSubLists.parentList.name ?: "List",
-                        color = MaterialTheme.colorScheme.onSurface,//parentListWithSubLists.parentList.textColor.getColor(),
-                        fontSize = 20.sp,
-                        fontWeight = fontWeight,
-                        style = textStyle
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1F))
                 if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                 } else {

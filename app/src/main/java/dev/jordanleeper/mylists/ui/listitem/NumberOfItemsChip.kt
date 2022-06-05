@@ -1,4 +1,4 @@
-package dev.jordanleeper.mylists.ui.parent
+package dev.jordanleeper.mylists.ui.listitem
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

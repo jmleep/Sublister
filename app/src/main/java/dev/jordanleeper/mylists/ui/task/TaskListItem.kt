@@ -1,4 +1,4 @@
-package dev.jordanleeper.mylists.ui.item
+package dev.jordanleeper.mylists.ui.task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 
 @Composable
-fun ItemListItem(item: Item, viewModel: ParentListActivityViewModel) {
+fun TaskListItem(item: Item, viewModel: ParentListActivityViewModel) {
     val haptic = LocalHapticFeedback.current
 
     val textStyle = when (item.isComplete) {
@@ -58,5 +58,4 @@ fun ItemListItem(item: Item, viewModel: ParentListActivityViewModel) {
             )
         }
     }
-
 }

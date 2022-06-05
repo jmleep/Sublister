@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.data.SubList
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
+import dev.jordanleeper.mylists.ui.sublist.SubListItem
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
 import dev.jordanleeper.mylists.ui.theme.Palette
 import dev.jordanleeper.mylists.ui.theme.getColor
@@ -65,9 +66,8 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                 ) {
                     LazyColumn() {
                         items(subLists, key = { it.hashCode() }) {
-                            ParentListItem(
+                            SubListItem(
                                 viewModel = viewModel,
-                                parentList = parentList!!,
                                 subList = it
                             )
                         }
