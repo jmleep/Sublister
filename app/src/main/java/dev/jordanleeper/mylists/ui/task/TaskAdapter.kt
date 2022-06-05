@@ -17,6 +17,8 @@ class TaskAdapter
     (private val items: List<Item>, private val viewModel: ParentListActivityViewModel) :
     RecyclerView.Adapter<TaskAdapter.ViewHolder>(), TaskItemTouchCallback.ItemTouchHelperContract {
 
+    var mItems = items
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var row = view
         var nameTextView = view.findViewById<TextView>(R.id.task_name)
@@ -40,23 +42,23 @@ class TaskAdapter
         position: Int
     ) {
         // Get the data model based on position
-        val item: Item = items[position]
+        val item: Item = mItems[position]
         // Set item views based on your views and data model
         holder.nameTextView.text = item.name
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return mItems.size
     }
 
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
-                Collections.swap(items, i, i + 1)
+                Collections.swap(mItems, i, i + 1)
             }
         } else {
             for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(items, i, i - 1)
+                Collections.swap(mItems, i, i - 1)
             }
         }
         notifyItemMoved(fromPosition, toPosition)
@@ -68,7 +70,7 @@ class TaskAdapter
 
     override fun onRowClear(myViewHolder: ViewHolder?) {
         myViewHolder?.row?.setBackgroundColor(Color.White.toArgb());
-        
-        viewModel.updateItems(items)
+
+        viewModel.updateItems(mItems)
     }
 }

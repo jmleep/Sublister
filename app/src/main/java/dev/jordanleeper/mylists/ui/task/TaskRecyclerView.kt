@@ -44,6 +44,8 @@ fun TaskRecyclerView(
 
         recyclerView
     }, update = {
-        it.adapter = taskAdapter
+        val adapter = it.adapter as TaskAdapter
+        adapter.mItems = items
+        adapter.notifyDataSetChanged()
     })
 }
