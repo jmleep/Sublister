@@ -71,6 +71,10 @@ class TaskAdapter
     override fun onRowClear(myViewHolder: ViewHolder?) {
         myViewHolder?.row?.setBackgroundColor(Color.White.toArgb());
 
-        viewModel.updateItems(mItems)
+        val updatedItems = mItems.mapIndexed { index, item ->
+            item.copy(position = index)
+        }
+
+        viewModel.updateItems(updatedItems)
     }
 }

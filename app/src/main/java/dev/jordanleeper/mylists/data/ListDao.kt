@@ -36,7 +36,7 @@ interface ListDao {
     @Delete
     fun deleteSubList(list: SubList)
 
-    @Query("SELECT * FROM item WHERE subListId = :id ORDER BY position DESC")
+    @Query("SELECT * FROM item WHERE subListId = :id ORDER BY position ASC")
     fun getItemsBySubListId(id: Int): LiveData<List<Item>>
 
     @Insert
