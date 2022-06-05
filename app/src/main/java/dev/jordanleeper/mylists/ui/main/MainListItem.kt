@@ -5,16 +5,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -67,7 +70,7 @@ fun MainListItem(
 
         Box(
             modifier = Modifier
-                .background(parentListWithSubLists.parentList.color.getColor())
+                .background(MaterialTheme.colorScheme.surface)//parentListWithSubLists.parentList.color.getColor())
                 .fillMaxWidth()
                 .combinedClickable(
                     onClick = {
@@ -88,18 +91,28 @@ fun MainListItem(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(25.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding(10.dp),
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    parentListWithSubLists.parentList.name ?: "List",
-                    color = parentListWithSubLists.parentList.textColor.getColor(),
-                    fontSize = 20.sp,
-                    fontWeight = fontWeight,
-                    style = textStyle
+                Box(
+                    modifier = Modifier
+                        .width(5.dp)
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(parentListWithSubLists.parentList.color.getColor())
                 )
 
+                Box(modifier = Modifier.padding(start = 15.dp)) {
+                    Text(
+                        parentListWithSubLists.parentList.name ?: "List",
+                        color = MaterialTheme.colorScheme.onSurface,//parentListWithSubLists.parentList.textColor.getColor(),
+                        fontSize = 20.sp,
+                        fontWeight = fontWeight,
+                        style = textStyle
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1F))
                 if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                 } else {

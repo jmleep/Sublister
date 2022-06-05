@@ -1,46 +1,42 @@
 package dev.jordanleeper.mylists.ui.parent
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import dev.jordanleeper.mylists.R
 import dev.jordanleeper.mylists.data.Item
 import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.data.SubList
-import dev.jordanleeper.mylists.ui.item.ItemListItem
+import dev.jordanleeper.mylists.ui.item.ItemAdapter
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
-import org.burnoutcrew.reorderable.ReorderableItem
-import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.rememberReorderableLazyListState
-import org.burnoutcrew.reorderable.reorderable
 import java.util.*
 
 @Composable
@@ -53,6 +49,8 @@ fun ParentListItem(
     val itemsList by viewModel.getItemsBySubListId(subList.id).observeAsState(initial = listOf())
     val itemText = remember { mutableStateOf("") }
     val haptic = LocalHapticFeedback.current
+    val itemAdapter = ItemAdapter(itemsList)
+
 
     var temp = itemsList.toMutableStateList()
 
@@ -132,68 +130,96 @@ fun ParentListItem(
 
 
                 AnimatedVisibility(
-                    visible = isExpanded.value,
-                    enter = expandIn(animationSpec = tween(5000, easing = LinearOutSlowInEasing))
+                    visible = isExpanded.value
                 ) {
-                    val height = (itemsList.size * 60) + 80
-                    LazyColumn(
-                        modifier = Modifier
-                            .reorderable(state)
-                            .height(height.dp),
-                        state = state.listState
-                    ) {
-                        item {
-                            Row(
-                                modifier = Modifier
-                                    .height(80.dp)
-                                    .background(MaterialTheme.colorScheme.surface)
-                                    .padding(
-                                        top = 5.dp,
-                                        bottom = 5.dp,
-                                        start = 10.dp,
-                                        end = 10.dp
-                                    )
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                TextField(
-                                    value = itemText.value,
-                                    onValueChange = { itemText.value = it })
+                    Column {
 
-                                Button(
-                                    onClick = {
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        viewModel.addItem(
-                                            Item(
-                                                name = itemText.value,
-                                                subListId = subList.id,
-                                                dateCreated = Date().time,
-                                                position = itemsList.size + 1
-                                            )
+
+                        Row(
+                            modifier = Modifier
+                                .height(80.dp)
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(
+                                    top = 5.dp,
+                                    bottom = 5.dp,
+                                    start = 10.dp,
+                                    end = 10.dp
+                                )
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TextField(
+                                value = itemText.value,
+                                onValueChange = { itemText.value = it })
+                            Button(
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    val itemListPrevSize = itemsList.size
+                                    viewModel.addItem(
+                                        Item(
+                                            name = itemText.value,
+                                            subListId = subList.id,
+                                            dateCreated = Date().time,
+                                            position = itemsList.size + 1
                                         )
-                                        itemText.value = ""
-                                    }
+                                    )
+                                    itemText.value = ""
 
-                                ) {
-                                    Text("Add")
                                 }
+                            ) {
+                                Text("Add")
                             }
                         }
-                        items(temp, key = { it.hashCode() }) { listItem ->
-                            ReorderableItem(state, key = listItem.hashCode()) { isDragging ->
-                                val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
 
-                                Box(
-                                    modifier = Modifier
-                                        .shadow(elevation.value)
-                                        .detectReorderAfterLongPress(state)
-                                ) {
-                                    ItemListItem(item = listItem, viewModel)
-                                }
+                        AndroidView(factory = {
+                            val view = LayoutInflater.from(it)
+                                .inflate(R.layout.item_recycler_view, null, false)
+
+
+                            val recyclerView =
+                                view.findViewById<RecyclerView>(R.id.item_recycler_view)
+
+                            if (recyclerView.parent != null) {
+                                (recyclerView.parent as ViewGroup).removeView(recyclerView)
                             }
-                        }
+
+                            recyclerView.adapter = ItemAdapter(itemsList)
+                            recyclerView.layoutManager = LinearLayoutManager(it)
+                            recyclerView
+                        }, update = {
+
+//                            if (itemsList.size !== it.adapter?.itemCount) {
+//                                it.adapter.se
+//                            }
+                            
+                            it.adapter = ItemAdapter(itemsList)
+                        })
                     }
+
+//                    val height = (itemsList.size * 60) + 80
+//                    LazyColumn(
+//                        modifier = Modifier
+//                            .reorderable(state)
+//                            .height(height.dp),
+//                        state = state.listState
+//                    ) {
+//                        item {
+//
+//                        items(temp, key = { it.hashCode() }) { listItem ->
+//                            ReorderableItem(state, key = listItem.hashCode()) { isDragging ->
+//                                val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp)
+//
+//                                Box(
+//                                    modifier = Modifier
+//                                        .shadow(elevation.value)
+//                                        .detectReorderAfterLongPress(state)
+//                                ) {
+//                                    ItemListItem(item = listItem, viewModel)
+//                                }
+//                            }
+//                        }
+//                    }
                 }
             }
         }
