@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.toArgb
 import androidx.recyclerview.widget.RecyclerView
 import dev.jordanleeper.mylists.R
@@ -22,7 +22,8 @@ class TaskAdapter
     (
     private var items: List<Item>,
     private val subList: SubList,
-    private val viewModel: ParentListActivityViewModel
+    private val viewModel: ParentListActivityViewModel,
+    private val colorScheme: ColorScheme
 ) :
     RecyclerView.Adapter<TaskAdapter.ViewHolder>(), TaskItemTouchCallback.ItemTouchHelperContract {
 
@@ -38,11 +39,10 @@ class TaskAdapter
         parent: ViewGroup,
         viewType: Int
     ): TaskAdapter.ViewHolder {
-        val context = parent.context
-        val inflater = LayoutInflater.from(context)
-        // Inflate the custom layout
+        val inflater = LayoutInflater.from(parent.context)
 
         val itemView = inflater.inflate(R.layout.task_recycler_view_item, parent, false)
+
         // Return a new holder instance
         return ViewHolder(itemView)
     }
@@ -51,10 +51,12 @@ class TaskAdapter
         holder: TaskAdapter.ViewHolder,
         position: Int
     ) {
+        holder.itemView.setBackgroundColor(colorScheme.surface.toArgb())
         // Get the data model based on position
         val item: Item = mItems[position]
         // Set item views based on your views and data model
         holder.nameTextView.text = item.name
+        holder.nameTextView.setTextColor(colorScheme.onSurface.toArgb())
 
         if (item.isComplete) {
             holder.nameTextView.paintFlags =
@@ -91,11 +93,11 @@ class TaskAdapter
     }
 
     override fun onRowSelected(myViewHolder: ViewHolder?) {
-        myViewHolder?.row?.setBackgroundColor(Color.Gray.toArgb());
+        myViewHolder?.row?.setBackgroundColor(colorScheme.surfaceVariant.toArgb());
     }
 
     override fun onRowClear(myViewHolder: ViewHolder?) {
-        myViewHolder?.row?.setBackgroundColor(Color.White.toArgb());
+        myViewHolder?.row?.setBackgroundColor(colorScheme.surface.toArgb());
 
         val updatedItems = mItems.mapIndexed { index, item ->
             item.copy(position = index)

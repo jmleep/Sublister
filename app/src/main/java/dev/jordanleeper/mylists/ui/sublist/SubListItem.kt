@@ -8,6 +8,7 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -93,7 +94,12 @@ fun SubListItem(
                         )
                         TaskRecyclerView(
                             items = itemsList,
-                            taskAdapter = TaskAdapter(itemsList, subList, viewModel)
+                            taskAdapter = TaskAdapter(
+                                itemsList,
+                                subList,
+                                viewModel,
+                                MaterialTheme.colorScheme
+                            )
                         )
                     }
                 }
