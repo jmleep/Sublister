@@ -1,13 +1,75 @@
 package dev.jordanleeper.mylists.ui.task
 
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import dev.jordanleeper.mylists.R
 
-class TaskItemTouchCallback(private val adapter: ItemTouchHelperContract?) :
-    ItemTouchHelper.Callback() {
 
-    override fun isItemViewSwipeEnabled(): Boolean {
-        return false
+class TaskItemTouchCallback(
+    private val context: Context,
+    private val adapter: ItemTouchHelperContract?
+) : ItemTouchHelper.Callback() {
+    private var icon: Drawable? = null
+    private var background: ColorDrawable? = null
+
+    init {
+        icon = ContextCompat.getDrawable(
+            context,
+            R.drawable.ic_baseline_delete_24
+        );
+        background = ColorDrawable(Color.RED)
+    }
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        super.onChildDraw(
+            c, recyclerView, viewHolder, dX,
+            dY, actionState, isCurrentlyActive
+        )
+        val itemView: View = viewHolder.itemView
+        val backgroundCornerOffset = 20
+
+        val iconMargin = (itemView.height - icon!!.intrinsicHeight) / 2
+        val iconTop = itemView.top + (itemView.height - icon!!.intrinsicHeight) / 2
+        val iconBottom = iconTop + icon!!.intrinsicHeight
+
+        if (dX > 0) { // Swiping to the right
+            val iconLeft = itemView.left + iconMargin + icon!!.intrinsicWidth
+            val iconRight = itemView.left + iconMargin
+            icon!!.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+            background!!.setBounds(
+                itemView.left, itemView.top,
+                itemView.left + dX.toInt() + backgroundCornerOffset,
+                itemView.bottom
+            )
+        } else if (dX < 0) { // Swiping to the left
+            val iconLeft = itemView.right - iconMargin - icon!!.intrinsicWidth
+            val iconRight = itemView.right - iconMargin
+            icon!!.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+            background!!.setBounds(
+                itemView.right + dX.toInt() - backgroundCornerOffset,
+                itemView.top, itemView.right, itemView.bottom
+            )
+        } else { // view is unSwiped
+            background!!.setBounds(0, 0, 0, 0)
+        }
+
+        background!!.draw(c)
+        icon!!.draw(c)
     }
 
     override fun getMovementFlags(
@@ -15,15 +77,21 @@ class TaskItemTouchCallback(private val adapter: ItemTouchHelperContract?) :
         viewHolder: RecyclerView.ViewHolder
     ): Int {
         val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        return makeMovementFlags(dragFlags, 0)
+
+        return makeMovementFlags(dragFlags, ItemTouchHelper.LEFT)
     }
 
     override fun isLongPressDragEnabled(): Boolean {
         return true
     }
+    
+    override fun isItemViewSwipeEnabled(): Boolean {
+        return true
+    }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        println("test")
+        println("on swip $direction")
+        adapter?.onRowDelete(viewHolder as TaskAdapter.ViewHolder)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -53,24 +121,16 @@ class TaskItemTouchCallback(private val adapter: ItemTouchHelperContract?) :
     ): Boolean {
         val fromPosition = viewHolder.adapterPosition
         val toPosition = target.adapterPosition
-        adapter?.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-//        println("ON MOVE")
-//        println(fromPosition)
-//        println(toPosition)
-//
-//        Collections.swap(items, fromPosition, toPosition)
-//        viewModel.updateItems(items)
-//        recyclerView.adapter?.notifyItemMoved(fromPosition, toPosition)
+        adapter?.onRowMoved(fromPosition, toPosition);
 
-//                mAdapter.notifyItemMoved(fromPosition, toPosition)
         return true
-
     }
 
     interface ItemTouchHelperContract {
         fun onRowMoved(fromPosition: Int, toPosition: Int)
         fun onRowSelected(myViewHolder: TaskAdapter.ViewHolder?)
         fun onRowClear(myViewHolder: TaskAdapter.ViewHolder?)
+        fun onRowDelete(viewHolder: TaskAdapter.ViewHolder)
     }
 }
 

@@ -59,6 +59,8 @@ class TaskAdapter
         if (item.isComplete) {
             holder.nameTextView.paintFlags =
                 holder.nameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        } else {
+            holder.nameTextView.paintFlags = 0
         }
 
         holder.checkBoxView.buttonTintList =
@@ -100,5 +102,9 @@ class TaskAdapter
         }
 
         viewModel.updateItems(updatedItems)
+    }
+
+    override fun onRowDelete(viewHolder: ViewHolder) {
+        viewModel.deleteItem(mItems[viewHolder.adapterPosition])
     }
 }

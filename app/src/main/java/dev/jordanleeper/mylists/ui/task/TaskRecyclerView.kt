@@ -10,13 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dev.jordanleeper.mylists.R
 import dev.jordanleeper.mylists.data.Item
-import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 
 
 @Composable
 fun TaskRecyclerView(
     items: List<Item>,
-    viewModel: ParentListActivityViewModel,
     taskAdapter: TaskAdapter
 ) {
     AndroidView(factory = {
@@ -38,7 +36,7 @@ fun TaskRecyclerView(
                 DividerItemDecoration.VERTICAL
             )
         )
-        val touchCallback = TaskItemTouchCallback(taskAdapter)
+        val touchCallback = TaskItemTouchCallback(it, taskAdapter)
         val itemTouchHelper = ItemTouchHelper(touchCallback)
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
