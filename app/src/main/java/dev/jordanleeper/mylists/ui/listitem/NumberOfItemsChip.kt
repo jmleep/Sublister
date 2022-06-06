@@ -2,7 +2,6 @@ package dev.jordanleeper.mylists.ui.listitem
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
@@ -31,13 +30,12 @@ fun NumberOfItemsChip(
             },
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(backgroundColor = color),
-            modifier = Modifier
-                .size(40.dp)
         ) {
             Text(
                 displayNumber,
                 color = textColor,
             )
+
             isExpanded?.let {
                 if (isExpanded.value) {
                     Icon(
@@ -53,6 +51,7 @@ fun NumberOfItemsChip(
                     )
                 }
             }
+
         }
     }
 }
