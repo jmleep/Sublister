@@ -14,7 +14,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.ListColorButton
+import dev.jordanleeper.mylists.ui.theme.Blue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,17 +25,21 @@ fun AddEditListDialog(
     label: String,
     colors: List<String>,
     textColors: List<String>,
+    parentList: ParentList? = null,
     addNewList: (newListName: String, newListColor: String, myTextColor: String) -> Unit
 ) {
-    var newListName by remember { mutableStateOf("") }
+    var newListName by remember { mutableStateOf(parentList?.name ?: "") }
     val focusRequester = remember { FocusRequester() }
-    var newListColorIndex by remember { mutableStateOf(0) }
+    var newListColor by remember {
+        mutableStateOf(
+            parentList?.color ?: Blue
+        )
+    }
 
     fun resetDialogFields() {
         newListName = ""
-        newListColorIndex = 0
+        newListColor = Blue
     }
-
 
     if (showAddListDialog.value) {
         Dialog(
@@ -58,8 +64,8 @@ fun AddEditListDialog(
                                 onDone = {
                                     addNewList(
                                         newListName,
-                                        colors[newListColorIndex],
-                                        textColors[newListColorIndex]
+                                        newListColor,
+                                        textColors[colors.indexOf(newListColor)]
                                     )
                                     resetDialogFields()
                                 }
@@ -75,11 +81,11 @@ fun AddEditListDialog(
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            colors.forEachIndexed() { index, color ->
+                            colors.forEach() { color ->
                                 ListColorButton(
                                     color = color,
-                                    isChecked = newListColorIndex == index,
-                                    onChange = { newListColorIndex = index }
+                                    isChecked = newListColor == color,
+                                    onChange = { newListColor = color }
                                 )
                             }
                         }
@@ -106,8 +112,8 @@ fun AddEditListDialog(
                                 onClick = {
                                     addNewList(
                                         newListName,
-                                        colors[newListColorIndex],
-                                        textColors[newListColorIndex]
+                                        newListColor,
+                                        textColors[colors.indexOf(newListColor)]
                                     )
                                     resetDialogFields()
                                 }, modifier = Modifier.padding(start = 15.dp)

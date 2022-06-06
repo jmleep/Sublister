@@ -52,7 +52,7 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     showAddListDialog,
                     label = "Add List",
                     colors = ParentListItemPalette,
-                    textColors = ParentListItemPaletteText
+                    textColors = ParentListItemPaletteText,
                 ) { newListName, newListColor, myTextColor ->
                     viewModel.addList(
                         ParentList(

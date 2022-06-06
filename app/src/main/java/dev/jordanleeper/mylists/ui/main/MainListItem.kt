@@ -105,7 +105,8 @@ fun MainListItem(
             showEditListDialog,
             label = "Edit List",
             colors = parentListPalette.colors,
-            textColors = parentListPalette.textColors
+            textColors = parentListPalette.textColors,
+            parentList = parentListWithSubLists.parentList
         ) { newListName, newListColor, myTextColor ->
             val editedList = parentListWithSubLists.parentList.copy()
             editedList.name = newListName
