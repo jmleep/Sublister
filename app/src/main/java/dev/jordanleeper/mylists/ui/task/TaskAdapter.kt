@@ -1,8 +1,11 @@
 package dev.jordanleeper.mylists.ui.task
 
+import android.content.res.ColorStateList
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -10,11 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.jordanleeper.mylists.R
 import dev.jordanleeper.mylists.data.Item
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
+import dev.jordanleeper.mylists.data.SubList
+import dev.jordanleeper.mylists.ui.theme.getColor
 import java.util.*
 
 
 class TaskAdapter
-    (private val items: List<Item>, private val viewModel: ParentListActivityViewModel) :
+    (
+    private var items: List<Item>,
+    private val subList: SubList,
+    private val viewModel: ParentListActivityViewModel
+) :
     RecyclerView.Adapter<TaskAdapter.ViewHolder>(), TaskItemTouchCallback.ItemTouchHelperContract {
 
     var mItems = items
@@ -22,6 +31,7 @@ class TaskAdapter
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var row = view
         var nameTextView = view.findViewById<TextView>(R.id.task_name)
+        var checkBoxView = view.findViewById<CheckBox>(R.id.task_is_complete)
     }
 
     override fun onCreateViewHolder(
@@ -45,6 +55,20 @@ class TaskAdapter
         val item: Item = mItems[position]
         // Set item views based on your views and data model
         holder.nameTextView.text = item.name
+
+        if (item.isComplete) {
+            holder.nameTextView.paintFlags =
+                holder.nameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }
+
+        holder.checkBoxView.buttonTintList =
+            ColorStateList.valueOf(subList.color.getColor().toArgb())
+        holder.checkBoxView.setOnCheckedChangeListener(null)
+        holder.checkBoxView.isChecked = item.isComplete
+        holder.checkBoxView.setOnCheckedChangeListener { buttonView, isChecked ->
+            val updatedItem = item.copy(isComplete = isChecked)
+            viewModel.updateItem(updatedItem)
+        }
     }
 
     override fun getItemCount(): Int {

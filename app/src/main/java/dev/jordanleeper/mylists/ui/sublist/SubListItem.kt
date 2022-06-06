@@ -94,7 +94,7 @@ fun SubListItem(
                         TaskRecyclerView(
                             items = itemsList,
                             viewModel,
-                            taskAdapter = TaskAdapter(itemsList, viewModel)
+                            taskAdapter = TaskAdapter(itemsList, subList, viewModel)
                         )
                     }
                 }
