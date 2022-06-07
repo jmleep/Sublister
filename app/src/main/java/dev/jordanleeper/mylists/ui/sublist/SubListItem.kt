@@ -25,7 +25,7 @@ import dev.jordanleeper.mylists.data.SubList
 import dev.jordanleeper.mylists.ui.listitem.ListItem
 import dev.jordanleeper.mylists.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
-import dev.jordanleeper.mylists.ui.task.AddTaskButton
+import dev.jordanleeper.mylists.ui.task.AddTask
 import dev.jordanleeper.mylists.ui.task.TaskAdapter
 import dev.jordanleeper.mylists.ui.task.TaskRecyclerView
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
@@ -92,7 +92,7 @@ fun SubListItem(
                     visible = isExpanded.value
                 ) {
                     Column {
-                        AddTaskButton(
+                        AddTask(
                             text = itemText,
                             viewModel = viewModel,
                             subList = subList,

@@ -18,7 +18,7 @@ import dev.jordanleeper.mylists.ui.theme.getColor
 import java.util.*
 
 @Composable
-fun AddTaskButton(
+fun AddTask(
     text: MutableState<String>,
     viewModel: ParentListActivityViewModel,
     subList: SubList,
@@ -46,7 +46,10 @@ fun AddTaskButton(
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = subList.color.getColor(),
                 unfocusedIndicatorColor = subList.color.getColor()
-            )
+            ),
+            modifier = Modifier
+                .weight(1F)
+                .padding(end = 15.dp)
         )
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = subList.color.getColor()),
