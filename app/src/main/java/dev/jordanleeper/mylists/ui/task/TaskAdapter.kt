@@ -2,11 +2,13 @@ package dev.jordanleeper.mylists.ui.task
 
 import android.content.res.ColorStateList
 import android.graphics.Paint
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
-import android.widget.TextView
+import android.widget.EditText
 import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.toArgb
 import androidx.recyclerview.widget.RecyclerView
@@ -31,7 +33,7 @@ class TaskAdapter
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var row = view
-        var nameTextView = view.findViewById<TextView>(R.id.task_name)
+        var taskEditText = view.findViewById<EditText>(R.id.task_name)
         var checkBoxView = view.findViewById<CheckBox>(R.id.task_is_complete)
     }
 
@@ -55,14 +57,28 @@ class TaskAdapter
         // Get the data model based on position
         val item: Item = mItems[position]
         // Set item views based on your views and data model
-        holder.nameTextView.text = item.name
-        holder.nameTextView.setTextColor(colorScheme.onSurface.toArgb())
+        holder.taskEditText.setText(item.name)
+        holder.taskEditText.setTextColor(colorScheme.onSurface.toArgb())
+        holder.taskEditText.imeOptions = EditorInfo.IME_ACTION_DONE;
+        holder.taskEditText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        holder.taskEditText.setOnEditorActionListener { v, actionId, event ->
+            val newTaskText = v.text.toString()
+            if (actionId == EditorInfo.IME_ACTION_DONE && newTaskText.isNotBlank()) {
+                val updatedItem = item.copy(name = newTaskText)
+                viewModel.updateItem(updatedItem)
+                v.clearFocus()
+                true
+            } else {
+                v.error = "Please set a value"
+                false
+            }
+        }
 
         if (item.isComplete) {
-            holder.nameTextView.paintFlags =
-                holder.nameTextView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            holder.taskEditText.paintFlags =
+                holder.taskEditText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         } else {
-            holder.nameTextView.paintFlags = 0
+            holder.taskEditText.paintFlags = 0
         }
 
         holder.checkBoxView.buttonTintList =

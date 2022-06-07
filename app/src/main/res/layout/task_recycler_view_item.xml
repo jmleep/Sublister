@@ -14,12 +14,16 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="15dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/task_is_complete"
         android:layout_centerVertical="true"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:autofillHints=""
+        android:inputType="textMultiLine"
+        android:textSize="15sp"
+        android:background="@null" />
 
 </RelativeLayout>
