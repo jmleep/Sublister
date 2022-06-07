@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import dev.jordanleeper.mylists.data.MainActivityViewModel
@@ -59,13 +58,14 @@ fun MainListItem(
         }
         shouldDismiss
     }) {
-        val textStyle = when (parentListWithSubLists.parentList.isComplete) {
-            true -> TextStyle(textDecoration = TextDecoration.LineThrough)
-            false -> TextStyle(textDecoration = TextDecoration.None)
+        var textStyle = when (parentListWithSubLists.parentList.isComplete) {
+            true -> MaterialTheme.typography.titleLarge.copy(textDecoration = TextDecoration.LineThrough)
+            false -> MaterialTheme.typography.titleLarge
         }
 
-        val fontWeight =
-            if (parentListWithSubLists.subLists.isNotEmpty()) FontWeight.Bold else FontWeight.Normal
+        if (parentListWithSubLists.subLists.isNotEmpty()) {
+            textStyle = textStyle.copy(fontWeight = FontWeight.Bold)
+        }
 
         Box(
             modifier = Modifier
@@ -91,7 +91,6 @@ fun MainListItem(
                 color = parentListWithSubLists.parentList.color.getColor(),
                 label = parentListWithSubLists.parentList.name ?: "List",
                 style = textStyle,
-                fontWeight = fontWeight
             ) {
                 if (parentListWithSubLists.parentList.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)

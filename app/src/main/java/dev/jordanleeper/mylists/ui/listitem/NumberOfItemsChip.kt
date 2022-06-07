@@ -9,6 +9,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -34,6 +35,7 @@ fun NumberOfItemsChip(
             Text(
                 displayNumber,
                 color = textColor,
+                style = MaterialTheme.typography.labelLarge
             )
 
             isExpanded?.let {

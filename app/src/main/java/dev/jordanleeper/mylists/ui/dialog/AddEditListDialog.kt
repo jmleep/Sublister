@@ -11,7 +11,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.google.accompanist.flowlayout.FlowRow
 import dev.jordanleeper.mylists.ui.button.ListColorButton
@@ -66,7 +65,7 @@ fun AddEditListDialog(
                             label,
                             modifier = Modifier
                                 .padding(bottom = 5.dp),
-                            fontSize = 25.sp
+                            style = MaterialTheme.typography.headlineLarge
                         )
                         OutlinedTextField(
                             value = newListName,
@@ -114,6 +113,7 @@ fun AddEditListDialog(
                             ) {
                                 Text(
                                     "Cancel",
+                                    style = MaterialTheme.typography.bodyMedium,
                                     modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
                                     color = MaterialTheme.colorScheme.onSecondary
                                 )
@@ -123,7 +123,7 @@ fun AddEditListDialog(
                                     saveChange()
                                 }, modifier = Modifier.padding(start = 15.dp)
                             ) {
-                                Text("Add")
+                                Text("Add", style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }

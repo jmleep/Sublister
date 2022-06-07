@@ -31,6 +31,7 @@ fun MyListsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content
+        content = content,
+        typography = Typography
     )
 }

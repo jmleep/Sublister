@@ -11,7 +11,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import dev.jordanleeper.mylists.data.MainActivityViewModel
 import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
@@ -36,7 +35,7 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     ) {
                         Text(
                             "List Keeper",
-                            fontSize = 20.sp,
+                            style = MaterialTheme.typography.headlineMedium,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     }

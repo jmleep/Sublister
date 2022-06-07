@@ -11,15 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun ListItem(
     color: Color,
     label: String,
-    fontWeight: FontWeight = FontWeight.Normal,
     style: TextStyle = TextStyle.Default,
     chipContent: @Composable() () -> Unit
 ) {
@@ -42,8 +39,6 @@ fun ListItem(
             Text(
                 text = label,
                 color = MaterialTheme.colorScheme.onSurface,//parentListWithSubLists.parentList.textColor.getColor(),
-                fontSize = 20.sp,
-                fontWeight = fontWeight,
                 style = style
             )
         }

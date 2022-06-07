@@ -1,28 +1,35 @@
 package dev.jordanleeper.mylists.ui.theme
 
-import androidx.compose.material.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import dev.jordanleeper.mylists.R
+
+val lato = FontFamily(
+    Font(R.font.lato_regular),
+    Font(R.font.lato_bold, FontWeight.Bold),
+    Font(R.font.lato_light, FontWeight.Light),
+    Font(R.font.lato_italic, style = FontStyle.Italic)
+)
+
+val default = Typography()
 val Typography = Typography(
-        body1 = TextStyle(
-                fontFamily = FontFamily.Default,
-                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
-        )
-        /* Other default text styles to override
-    button = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.W500,
-        fontSize = 14.sp
-    ),
-    caption = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp
-    )
-    */
+    headlineLarge = default.headlineLarge.copy(fontFamily = lato),
+    headlineMedium = default.headlineMedium.copy(fontFamily = lato),
+    headlineSmall = default.headlineSmall.copy(fontFamily = lato),
+    bodyLarge = default.bodyLarge.copy(fontFamily = lato),
+    bodyMedium = default.bodyMedium.copy(fontFamily = lato),
+    bodySmall = default.bodySmall.copy(fontFamily = lato),
+    titleLarge = default.titleLarge.copy(fontFamily = lato),
+    titleMedium = default.titleMedium.copy(fontFamily = lato),
+    titleSmall = default.titleSmall.copy(fontFamily = lato),
+    labelLarge = default.labelLarge.copy(fontFamily = lato),
+    labelMedium = default.labelMedium.copy(fontFamily = lato),
+    labelSmall = default.labelSmall.copy(fontFamily = lato),
+    displayLarge = default.displayLarge.copy(fontFamily = lato),
+    displayMedium = default.displayMedium.copy(fontFamily = lato),
+    displaySmall = default.displaySmall.copy(fontFamily = lato),
 )

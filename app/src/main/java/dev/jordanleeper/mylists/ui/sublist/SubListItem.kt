@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.data.SubList
@@ -59,8 +58,8 @@ fun SubListItem(
     }, isSwipingPrevented = isExpanded) {
 
         val textStyle = when (subList.isComplete) {
-            true -> TextStyle(textDecoration = TextDecoration.LineThrough)
-            false -> TextStyle(textDecoration = TextDecoration.None)
+            true -> MaterialTheme.typography.titleMedium.copy(textDecoration = TextDecoration.LineThrough)
+            false -> MaterialTheme.typography.titleMedium
         }
 
         Box(modifier = Modifier.combinedClickable(onClick = {
