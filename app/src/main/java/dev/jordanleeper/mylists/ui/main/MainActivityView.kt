@@ -34,10 +34,16 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) { Text("My Lists", fontSize = 30.sp) }
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Text(
+                            "List Keeper",
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
                 },
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                backgroundColor = MaterialTheme.colorScheme.primary,
             )
         }, floatingActionButton = {
             AddListFloatingActionButton(showAddListDialog)

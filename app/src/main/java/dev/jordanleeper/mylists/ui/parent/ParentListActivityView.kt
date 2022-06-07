@@ -54,7 +54,7 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                     title = {
                         Text(
                             parentList?.name ?: "Test",
-                            fontSize = 30.sp,
+                            fontSize = 20.sp,
                             color = itemTextColor
                         )
                     },
