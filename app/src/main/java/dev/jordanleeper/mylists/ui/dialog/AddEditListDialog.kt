@@ -40,6 +40,22 @@ fun AddEditListDialog(
         newListColor = allColors[0]
     }
 
+    fun saveChange() {
+        if (newListName !== "") {
+            val newTextColor =
+                if (allColors.indexOf(newListColor) != -1) allTextColors[allColors.indexOf(
+                    newListColor
+                )] else null
+
+            addNewList(
+                newListName,
+                newListColor,
+                newTextColor
+            )
+            resetDialogFields()
+        }
+    }
+
     if (showAddListDialog.value) {
         Dialog(
             onDismissRequest = { showAddListDialog.value = false },
@@ -62,16 +78,7 @@ fun AddEditListDialog(
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    val newTextColor =
-                                        if (allColors.indexOf(newListColor) != -1) allTextColors[allColors.indexOf(
-                                            newListColor
-                                        )] else null
-                                    addNewList(
-                                        newListName,
-                                        newListColor,
-                                        newTextColor
-                                    )
-                                    resetDialogFields()
+                                    saveChange()
                                 }
                             ),
                             colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -113,17 +120,7 @@ fun AddEditListDialog(
                             }
                             Button(
                                 onClick = {
-                                    val newTextColor =
-                                        if (allColors.indexOf(newListColor) != -1) allTextColors[allColors.indexOf(
-                                            newListColor
-                                        )] else null
-
-                                    addNewList(
-                                        newListName,
-                                        newListColor,
-                                        newTextColor
-                                    )
-                                    resetDialogFields()
+                                    saveChange()
                                 }, modifier = Modifier.padding(start = 15.dp)
                             ) {
                                 Text("Add")
