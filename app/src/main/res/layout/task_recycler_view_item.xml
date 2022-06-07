@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
     android:orientation="horizontal"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
@@ -12,6 +11,7 @@
         android:id="@+id/task_is_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="15dp" />
 
     <TextView
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/task_is_complete"
+        android:layout_centerVertical="true"
         android:textColor="@color/black" />
 
 </RelativeLayout>
