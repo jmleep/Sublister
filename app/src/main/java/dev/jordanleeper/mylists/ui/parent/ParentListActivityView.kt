@@ -86,8 +86,6 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                 AddEditListDialog(
                     showAddListDialog,
                     label = "Add SubList",
-                    colors = palette.colors,
-                    textColors = palette.textColors
                 ) { newListName, newListColor, newTextColor ->
                     viewModel.addSubList(
                         SubList(
@@ -104,8 +102,6 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                 AddEditListDialog(
                     showEditListDialog,
                     label = "Edit SubList",
-                    colors = palette.colors,
-                    textColors = palette.textColors,
                     currentName = currentlyEditingSubListName.value,
                     currentColor = currentlyEditingSublistColor.value,
                 ) { newListName, newListColor, newTextColor ->

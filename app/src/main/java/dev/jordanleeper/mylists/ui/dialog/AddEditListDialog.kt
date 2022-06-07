@@ -6,7 +6,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -14,15 +13,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.google.accompanist.flowlayout.FlowRow
 import dev.jordanleeper.mylists.ui.button.ListColorButton
+import dev.jordanleeper.mylists.ui.theme.allColors
+import dev.jordanleeper.mylists.ui.theme.allTextColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditListDialog(
     showAddListDialog: MutableState<Boolean>,
     label: String,
-    colors: List<String>,
-    textColors: List<String>,
     currentName: String? = null,
     currentColor: String? = null,
     addNewList: (newListName: String, newListColor: String, newTextColor: String?) -> Unit
@@ -32,12 +32,12 @@ fun AddEditListDialog(
     var newListName by remember { mutableStateOf("") }
     newListName = currentName ?: ""
 
-    var newListColor by remember { mutableStateOf(colors[0]) }
-    newListColor = currentColor ?: colors[0]
+    var newListColor by remember { mutableStateOf(allColors[0]) }
+    newListColor = currentColor ?: allColors[0]
 
     fun resetDialogFields() {
         newListName = ""
-        newListColor = colors[0]
+        newListColor = allColors[0]
     }
 
     if (showAddListDialog.value) {
@@ -52,7 +52,6 @@ fun AddEditListDialog(
                                 .padding(bottom = 5.dp),
                             fontSize = 25.sp
                         )
-                        println("NAME: $newListName")
                         OutlinedTextField(
                             value = newListName,
                             onValueChange = { newListName = it },
@@ -64,7 +63,7 @@ fun AddEditListDialog(
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     val newTextColor =
-                                        if (colors.indexOf(newListColor) != -1) textColors[colors.indexOf(
+                                        if (allColors.indexOf(newListColor) != -1) allTextColors[allColors.indexOf(
                                             newListColor
                                         )] else null
                                     addNewList(
@@ -80,13 +79,12 @@ fun AddEditListDialog(
                         LaunchedEffect(true) {
                             focusRequester.requestFocus()
                         }
-                        Row(
+                        FlowRow(
                             modifier = Modifier
                                 .padding(top = 15.dp)
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                                .fillMaxWidth()
                         ) {
-                            colors.forEach() { color ->
+                            allColors.forEach() { color ->
                                 ListColorButton(
                                     color = color,
                                     isChecked = newListColor == color,
@@ -105,18 +103,18 @@ fun AddEditListDialog(
                                     showAddListDialog.value = false
                                     newListName = ""
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                             ) {
                                 Text(
                                     "Cancel",
-                                    modifier = Modifier.background(MaterialTheme.colorScheme.tertiary),
-                                    color = MaterialTheme.colorScheme.onTertiary
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                             Button(
                                 onClick = {
                                     val newTextColor =
-                                        if (colors.indexOf(newListColor) != -1) textColors[colors.indexOf(
+                                        if (allColors.indexOf(newListColor) != -1) allTextColors[allColors.indexOf(
                                             newListColor
                                         )] else null
 

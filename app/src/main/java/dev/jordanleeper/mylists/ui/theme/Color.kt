@@ -61,6 +61,26 @@ fun String.getPalette(): Palette {
     }
 }
 
+val allColors = listOf(
+    parentListPalette.colors,
+    yellowPalette.colors,
+    rosePalette.colors,
+    bluePalette.colors,
+    sagePalette.colors,
+    grapePalette.colors,
+    peachPalette.colors
+).flatten()
+
+val allTextColors = listOf(
+    parentListPalette.textColors,
+    yellowPalette.textColors,
+    rosePalette.textColors,
+    bluePalette.textColors,
+    sagePalette.textColors,
+    grapePalette.textColors,
+    peachPalette.textColors
+).flatten()
+
 fun String.getColor(): Color {
     return Color(android.graphics.Color.parseColor(this))
 }

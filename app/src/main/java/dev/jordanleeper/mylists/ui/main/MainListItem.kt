@@ -28,7 +28,10 @@ import dev.jordanleeper.mylists.ui.listitem.ListItem
 import dev.jordanleeper.mylists.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.mylists.ui.parent.ParentListActivity
 import dev.jordanleeper.mylists.ui.swipe.ListItemSwipeToDismiss
-import dev.jordanleeper.mylists.ui.theme.*
+import dev.jordanleeper.mylists.ui.theme.ItemColor
+import dev.jordanleeper.mylists.ui.theme.MarkCompleted
+import dev.jordanleeper.mylists.ui.theme.getColor
+import dev.jordanleeper.mylists.ui.theme.onItemColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -104,8 +107,6 @@ fun MainListItem(
         AddEditListDialog(
             showEditListDialog,
             label = "Edit List",
-            colors = parentListPalette.colors,
-            textColors = parentListPalette.textColors,
             currentName = parentListWithSubLists.parentList.name,
             currentColor = parentListWithSubLists.parentList.color
         ) { newListName, newListColor, newTextColor ->

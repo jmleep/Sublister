@@ -17,8 +17,6 @@ import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.AddListFloatingActionButton
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
-import dev.jordanleeper.mylists.ui.theme.ParentListItemPalette
-import dev.jordanleeper.mylists.ui.theme.ParentListItemPaletteText
 import dev.jordanleeper.mylists.ui.theme.White
 import java.util.*
 
@@ -57,8 +55,6 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                 AddEditListDialog(
                     showAddListDialog,
                     label = "Add List",
-                    colors = ParentListItemPalette,
-                    textColors = ParentListItemPaletteText,
                 ) { newListName, newListColor, newTextColor ->
                     viewModel.addList(
                         ParentList(
