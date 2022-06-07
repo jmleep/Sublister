@@ -19,6 +19,7 @@ import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.theme.MyListsTheme
 import dev.jordanleeper.mylists.ui.theme.ParentListItemPalette
 import dev.jordanleeper.mylists.ui.theme.ParentListItemPaletteText
+import dev.jordanleeper.mylists.ui.theme.White
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +42,6 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
         }, floatingActionButton = {
             AddListFloatingActionButton(showAddListDialog)
         }, content = { paddingValues ->
-
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
@@ -53,12 +53,12 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     label = "Add List",
                     colors = ParentListItemPalette,
                     textColors = ParentListItemPaletteText,
-                ) { newListName, newListColor, myTextColor ->
+                ) { newListName, newListColor, newTextColor ->
                     viewModel.addList(
                         ParentList(
                             name = newListName,
                             color = newListColor,
-                            textColor = myTextColor,
+                            textColor = newTextColor ?: White,
                             isComplete = false,
                             dateCreated = Date().time
                         )

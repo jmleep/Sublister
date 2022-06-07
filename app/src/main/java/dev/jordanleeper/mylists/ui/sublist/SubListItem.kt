@@ -1,7 +1,8 @@
 package dev.jordanleeper.mylists.ui.sublist
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.DismissValue
@@ -30,10 +31,12 @@ import dev.jordanleeper.mylists.ui.task.TaskRecyclerView
 import dev.jordanleeper.mylists.ui.theme.MarkCompleted
 import dev.jordanleeper.mylists.ui.theme.getColor
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SubListItem(
     viewModel: ParentListActivityViewModel,
-    subList: SubList
+    subList: SubList,
+    editList: () -> Unit
 ) {
     val isExpanded = remember { mutableStateOf(false) }
     val itemsList by viewModel.getItemsBySubListId(subList.id).observeAsState(initial = listOf())
@@ -60,11 +63,14 @@ fun SubListItem(
             false -> TextStyle(textDecoration = TextDecoration.None)
         }
 
-        Box() {
-            Column(modifier = Modifier.clickable {
-                isExpanded.value = !isExpanded.value
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            }) {
+        Box(modifier = Modifier.combinedClickable(onClick = {
+            isExpanded.value = !isExpanded.value
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        }, onLongClick = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            editList()
+        })) {
+            Column() {
                 ListItem(
                     color = subList.color.getColor(),
                     label = subList.name ?: "List",

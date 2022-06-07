@@ -14,9 +14,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import dev.jordanleeper.mylists.data.ParentList
 import dev.jordanleeper.mylists.ui.button.ListColorButton
-import dev.jordanleeper.mylists.ui.theme.Blue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,20 +23,21 @@ fun AddEditListDialog(
     label: String,
     colors: List<String>,
     textColors: List<String>,
-    parentList: ParentList? = null,
-    addNewList: (newListName: String, newListColor: String, myTextColor: String) -> Unit
+    currentName: String? = null,
+    currentColor: String? = null,
+    addNewList: (newListName: String, newListColor: String, newTextColor: String?) -> Unit
 ) {
-    var newListName by remember { mutableStateOf(parentList?.name ?: "") }
     val focusRequester = remember { FocusRequester() }
-    var newListColor by remember {
-        mutableStateOf(
-            parentList?.color ?: Blue
-        )
-    }
+
+    var newListName by remember { mutableStateOf("") }
+    newListName = currentName ?: ""
+
+    var newListColor by remember { mutableStateOf(colors[0]) }
+    newListColor = currentColor ?: colors[0]
 
     fun resetDialogFields() {
         newListName = ""
-        newListColor = Blue
+        newListColor = colors[0]
     }
 
     if (showAddListDialog.value) {
@@ -53,19 +52,25 @@ fun AddEditListDialog(
                                 .padding(bottom = 5.dp),
                             fontSize = 25.sp
                         )
+                        println("NAME: $newListName")
                         OutlinedTextField(
                             value = newListName,
                             onValueChange = { newListName = it },
                             label = { Text("Name") },
                             modifier = Modifier
-                                .focusRequester(focusRequester),
+                                .focusRequester(focusRequester)
+                                .width(IntrinsicSize.Min),
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                             keyboardActions = KeyboardActions(
                                 onDone = {
+                                    val newTextColor =
+                                        if (colors.indexOf(newListColor) != -1) textColors[colors.indexOf(
+                                            newListColor
+                                        )] else null
                                     addNewList(
                                         newListName,
                                         newListColor,
-                                        textColors[colors.indexOf(newListColor)]
+                                        newTextColor
                                     )
                                     resetDialogFields()
                                 }
@@ -110,10 +115,15 @@ fun AddEditListDialog(
                             }
                             Button(
                                 onClick = {
+                                    val newTextColor =
+                                        if (colors.indexOf(newListColor) != -1) textColors[colors.indexOf(
+                                            newListColor
+                                        )] else null
+
                                     addNewList(
                                         newListName,
                                         newListColor,
-                                        textColors[colors.indexOf(newListColor)]
+                                        newTextColor
                                     )
                                     resetDialogFields()
                                 }, modifier = Modifier.padding(start = 15.dp)

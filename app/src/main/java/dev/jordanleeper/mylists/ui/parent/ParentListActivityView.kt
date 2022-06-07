@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -21,10 +20,7 @@ import dev.jordanleeper.mylists.data.ParentListActivityViewModel
 import dev.jordanleeper.mylists.data.SubList
 import dev.jordanleeper.mylists.ui.dialog.AddEditListDialog
 import dev.jordanleeper.mylists.ui.sublist.SubListItem
-import dev.jordanleeper.mylists.ui.theme.MyListsTheme
-import dev.jordanleeper.mylists.ui.theme.Palette
-import dev.jordanleeper.mylists.ui.theme.getColor
-import dev.jordanleeper.mylists.ui.theme.getPalette
+import dev.jordanleeper.mylists.ui.theme.*
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,11 +28,19 @@ import java.util.*
 fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
     val parentList by viewModel.getParentList(id).observeAsState()
     val subLists by viewModel.getSubListsByParentId(id).observeAsState(initial = listOf())
-
-    val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
-
     val showAddListDialog = remember { mutableStateOf(false) }
-    val palette = parentList?.color?.getPalette() ?: Palette()
+    val showEditListDialog = remember {
+        mutableStateOf(false)
+    }
+    val currentlyEditingSubListName = remember {
+        mutableStateOf("")
+    }
+    val currentlyEditingSublistColor = remember {
+        mutableStateOf("")
+    }
+    var currentlyEditingSublist: SubList? = null
+    val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
+    val palette = parentList?.color?.getPalette() ?: parentListPalette
 
     MyListsTheme {
         Scaffold(
@@ -68,7 +72,13 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                         items(subLists, key = { it.hashCode() }) {
                             SubListItem(
                                 viewModel = viewModel,
-                                subList = it
+                                subList = it,
+                                editList = {
+                                    currentlyEditingSubListName.value = it.name ?: ""
+                                    currentlyEditingSublistColor.value = it.color
+                                    currentlyEditingSublist = it
+                                    showEditListDialog.value = true
+                                }
                             )
                         }
                     }
@@ -78,18 +88,40 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
                     label = "Add SubList",
                     colors = palette.colors,
                     textColors = palette.textColors
-                ) { newListName, newListColor, myTextColor ->
+                ) { newListName, newListColor, newTextColor ->
                     viewModel.addSubList(
                         SubList(
                             name = newListName,
                             color = newListColor,
-                            textColor = myTextColor,
+                            textColor = newTextColor ?: White,
                             parentListId = parentList?.id ?: 0,
                             dateCreated = Date().time,
                             isComplete = false
                         )
                     )
                     showAddListDialog.value = false
+                }
+                AddEditListDialog(
+                    showEditListDialog,
+                    label = "Edit SubList",
+                    colors = palette.colors,
+                    textColors = palette.textColors,
+                    currentName = currentlyEditingSubListName.value,
+                    currentColor = currentlyEditingSublistColor.value,
+                ) { newListName, newListColor, newTextColor ->
+                    currentlyEditingSublist?.let { editingSubList ->
+                        val editedList = editingSubList.copy(
+                            name = newListName,
+                            color = newListColor
+                        )
+                        newTextColor?.let {
+                            editedList.textColor = it
+                        }
+
+                        viewModel.updateSubList(editedList)
+                    }
+
+                    showEditListDialog.value = false
                 }
             })
     }
