@@ -16,7 +16,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
 import dev.jordanleeper.sublister.data.SubList
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
-import dev.jordanleeper.sublister.ui.sublist.SubListItem
 import dev.jordanleeper.sublister.ui.theme.*
 import java.util.*
 
@@ -58,7 +57,7 @@ fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
                 ) {
                     LazyColumn() {
                         items(subLists, key = { it.hashCode() }) {
-                            SubListItem(
+                            ListDetailColumnItem(
                                 viewModel = viewModel,
                                 subList = it,
                                 editList = {

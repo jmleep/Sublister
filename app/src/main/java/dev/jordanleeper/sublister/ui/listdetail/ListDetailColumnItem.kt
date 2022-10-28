@@ -1,4 +1,4 @@
-package dev.jordanleeper.sublister.ui.sublist
+package dev.jordanleeper.sublister.ui.listdetail
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -32,7 +32,7 @@ import dev.jordanleeper.sublister.ui.theme.getColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SubListItem(
+fun ListDetailColumnItem(
     viewModel: ParentListActivityViewModel,
     subList: SubList,
     editList: () -> Unit
