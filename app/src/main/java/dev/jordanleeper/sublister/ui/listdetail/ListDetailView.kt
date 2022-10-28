@@ -1,12 +1,9 @@
-package dev.jordanleeper.sublister.ui.parent
+package dev.jordanleeper.sublister.ui.listdetail
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
 import dev.jordanleeper.sublister.data.SubList
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
@@ -25,7 +22,7 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
+fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
     val parentList by viewModel.getParentList(id).observeAsState()
     val subLists by viewModel.getSubListsByParentId(id).observeAsState(initial = listOf())
     val showAddListDialog = remember { mutableStateOf(false) }
@@ -42,24 +39,15 @@ fun ParentListActivityView(id: Int, viewModel: ParentListActivityViewModel) {
     val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
     val palette = parentList?.color?.getPalette() ?: parentListPalette
 
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(
+        color = parentList?.color?.getColor() ?: MaterialTheme.colorScheme.primary
+    )
+
     SublisterTheme {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    actions = {
-                        IconButton(onClick = { showAddListDialog.value = true }) {
-                            Icon(Icons.Default.Add, "Add Sublist", tint = itemTextColor)
-                        }
-                    },
-                    title = {
-                        Text(
-                            parentList?.name ?: "Test",
-                            fontSize = 20.sp,
-                            color = itemTextColor
-                        )
-                    },
-                    backgroundColor = parentList?.color?.getColor() ?: Color.Black
-                )
+                ListDetailAppBar(showAddListDialog, itemTextColor, parentList)
             },
             content = { paddingValues ->
                 Surface(

@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 /* Other default colors to override
 background = Color.White,
@@ -27,6 +28,14 @@ fun SublisterTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composa
         darkTheme -> darkColorScheme(primary = Color.Black)
         else -> lightColorScheme(primary = Color.LightGray)
     }
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(
+        color = colorScheme.primary
+    )
+    systemUiController.setNavigationBarColor(
+        color = colorScheme.surface
+    )
 
     MaterialTheme(
         colorScheme = colorScheme,

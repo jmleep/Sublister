@@ -20,6 +20,7 @@ import dev.jordanleeper.sublister.data.SubList
 import dev.jordanleeper.sublister.ui.theme.getColor
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTask(
     text: MutableState<String>,

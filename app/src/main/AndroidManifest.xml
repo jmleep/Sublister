@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Sublister"
         tools:targetApi="31">
         <activity
-            android:name="dev.jordanleeper.sublister.ui.home.MainActivity"
+            android:name="dev.jordanleeper.sublister.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Sublister">
             <intent-filter>
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="dev.jordanleeper.sublister.ui.parent.ParentListActivity"
+            android:name="dev.jordanleeper.sublister.ui.listdetail.ListDetailActivity"
             android:exported="true"
             android:theme="@style/Theme.Sublister">
             <intent-filter>

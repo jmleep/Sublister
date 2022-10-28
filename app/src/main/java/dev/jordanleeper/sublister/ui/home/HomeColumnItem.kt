@@ -23,9 +23,9 @@ import androidx.compose.ui.text.style.TextDecoration
 import dev.jordanleeper.sublister.data.MainActivityViewModel
 import dev.jordanleeper.sublister.data.ParentListWithSubLists
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
+import dev.jordanleeper.sublister.ui.listdetail.ListDetailActivity
 import dev.jordanleeper.sublister.ui.listitem.ListItem
 import dev.jordanleeper.sublister.ui.listitem.NumberOfItemsChip
-import dev.jordanleeper.sublister.ui.parent.ParentListActivity
 import dev.jordanleeper.sublister.ui.swipe.ListItemSwipeToDismiss
 import dev.jordanleeper.sublister.ui.theme.ItemColor
 import dev.jordanleeper.sublister.ui.theme.MarkCompleted
@@ -34,7 +34,7 @@ import dev.jordanleeper.sublister.ui.theme.onItemColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainListItem(
+fun HomeColumnItem(
     parentListWithSubLists: ParentListWithSubLists,
     viewModel: MainActivityViewModel
 ) {
@@ -76,7 +76,7 @@ fun MainListItem(
                         haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         val intent = Intent(
                             context,
-                            ParentListActivity::class.java
+                            ListDetailActivity::class.java
                         )
                         intent.putExtra("parentListId", parentListWithSubLists.parentList.id);
                         context.startActivity(intent)

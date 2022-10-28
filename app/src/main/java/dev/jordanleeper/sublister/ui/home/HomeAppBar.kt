@@ -1,21 +1,20 @@
-package dev.jordanleeper.sublister.ui.core
+package dev.jordanleeper.sublister.ui.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.TopAppBar
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar() {
+fun HomeAppBar() {
     TopAppBar(
         title = {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Start
             ) {
                 Text(
                     "Sublister",
@@ -24,6 +23,8 @@ fun AppBar() {
                 )
             }
         },
-        backgroundColor = MaterialTheme.colorScheme.primary,
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
     )
 }

@@ -65,7 +65,7 @@ fun AddEditListDialog(
                             label,
                             modifier = Modifier
                                 .padding(bottom = 5.dp),
-                            style = MaterialTheme.typography.headlineLarge
+                            style = MaterialTheme.typography.titleLarge
                         )
                         OutlinedTextField(
                             value = newListName,
@@ -123,7 +123,7 @@ fun AddEditListDialog(
                                     saveChange()
                                 }, modifier = Modifier.padding(start = 15.dp)
                             ) {
-                                Text("Add", style = MaterialTheme.typography.bodyMedium)
+                                Text("Save", style = MaterialTheme.typography.bodyMedium)
                             }
                         }
                     }

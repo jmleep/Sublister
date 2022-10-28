@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import dev.jordanleeper.sublister.data.MainActivityViewModel
 import dev.jordanleeper.sublister.data.ParentList
 import dev.jordanleeper.sublister.ui.button.AddListFloatingActionButton
-import dev.jordanleeper.sublister.ui.core.AppBar
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
 import dev.jordanleeper.sublister.ui.theme.SublisterTheme
 import dev.jordanleeper.sublister.ui.theme.White
@@ -27,7 +26,7 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
 
     SublisterTheme {
         Scaffold(topBar = {
-            AppBar()
+            HomeAppBar()
         }, floatingActionButton = {
             AddListFloatingActionButton(showAddListDialog)
         }, content = { paddingValues ->
@@ -60,7 +59,7 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     items(
                         parentListWithSubLists,
                         key = { it.parentList.hashCode() }) { it ->
-                        MainListItem(it, viewModel)
+                        HomeColumnItem(it, viewModel)
                     }
 
                 }
