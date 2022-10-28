@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="dev.jordanleeper.mylists">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -11,12 +10,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyLists"
+        android:theme="@style/Theme.Sublister"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name="dev.jordanleeper.sublister.ui.home.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyLists">
+            android:theme="@style/Theme.Sublister">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,9 +23,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.parent.ParentListActivity"
+            android:name="dev.jordanleeper.sublister.ui.parent.ParentListActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyLists">
+            android:theme="@style/Theme.Sublister">
             <intent-filter>
                 <action android:name="android.intent.action.PARENTLIST" />
 
