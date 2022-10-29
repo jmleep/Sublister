@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    val readAllData: LiveData<List<ParentListWithSubLists>>
+    val readAllData: LiveData<List<Sublist>>
     private val repository: ListRepository
 
 
@@ -19,21 +19,29 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
         readAllData = repository.readAllData
     }
 
-    fun addList(list: ParentList) {
+    fun addSublist(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addList(list)
+            repository.addSublist(list)
         }
     }
 
-    fun deleteList(list: ParentList) {
+    fun deleteList(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteParentList(list)
+            val childLists = repository.getChildSublistsByParentSublistId(list.id).value ?: listOf()
+
+            for (childList in childLists) {
+                if (childList.id != -1)
+                    deleteList(childList)
+            }
+
+            repository.deleteSubList(list)
+
         }
     }
 
-    fun updateParentList(list: ParentList) {
+    fun updateSubList(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateParentList(list)
+            repository.updateSubList(list)
         }
     }
 }

@@ -6,38 +6,44 @@ import androidx.room.*
 @Dao
 interface ListDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addList(parentList: ParentList)
-
-    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
-    fun getAllLists(): LiveData<List<ParentListWithSubLists>>
-
-    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
-    fun getAllParentLists(): LiveData<List<ParentList>>
-
-    @Delete
-    fun deleteParentList(list: ParentList)
-
-    @Update
-    fun updateParentList(list: ParentList)
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    fun addList(parentList: ParentList)
+//
+//    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
+//    fun getAllLists(): LiveData<List<ParentListWithSubLists>>
+//
+//    @Query("SELECT * FROM list ORDER BY dateCreated DESC")
+//    fun getAllParentLists(): LiveData<List<ParentList>>
+//
+//    @Delete
+//    fun deleteParentList(list: ParentList)
+//
+//    @Update
+//    fun updateParentList(list: ParentList)
+//
+//    @Query("SELECT * FROM list WHERE id = :id")
+//    fun getParentListById(id: Int): LiveData<ParentList>
 
     @Query("SELECT * FROM list WHERE id = :id")
-    fun getParentListById(id: Int): LiveData<ParentList>
+    fun getSublistById(id: Int): LiveData<Sublist>
 
-    @Query("SELECT * FROM sublist WHERE parentListId = :id ORDER BY dateCreated DESC")
-    fun getSubListsByParentId(id: Int): LiveData<List<SubList>>
+    @Query("SELECT * FROM list WHERE parentListId = -1 ORDER BY dateCreated DESC")
+    fun getAllRootSublists(): LiveData<List<Sublist>>
+
+    @Query("SELECT * FROM list WHERE parentListId = :id ORDER BY dateCreated DESC")
+    fun getChildSublistsByParentSublistId(id: Int): LiveData<List<Sublist>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addSubList(list: SubList)
+    fun addSublist(list: Sublist)
 
     @Update
-    fun updateSubList(list: SubList)
+    fun updateSubList(list: Sublist)
 
     @Delete
-    fun deleteSubList(list: SubList)
+    fun deleteSubList(list: Sublist)
 
-    @Query("SELECT * FROM item WHERE subListId = :id ORDER BY position ASC")
-    fun getItemsBySubListId(id: Int): LiveData<List<Item>>
+    @Query("SELECT * FROM item WHERE sublistId = :id ORDER BY position ASC")
+    fun getItemsBySublistId(id: Int): LiveData<List<Item>>
 
     @Insert
     fun addItem(item: Item)

@@ -18,24 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import dev.jordanleeper.sublister.data.MainActivityViewModel
-import dev.jordanleeper.sublister.data.ParentListWithSubLists
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
 import dev.jordanleeper.sublister.ui.listdetail.ListDetailActivity
 import dev.jordanleeper.sublister.ui.listitem.ListItem
-import dev.jordanleeper.sublister.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.sublister.ui.swipe.ListItemSwipeToDismiss
-import dev.jordanleeper.sublister.ui.theme.ItemColor
 import dev.jordanleeper.sublister.ui.theme.MarkCompleted
 import dev.jordanleeper.sublister.ui.theme.getColor
-import dev.jordanleeper.sublister.ui.theme.onItemColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeColumnItem(
-    parentListWithSubLists: ParentListWithSubLists,
+    sublist: Sublist,
     viewModel: MainActivityViewModel
 ) {
     val context = LocalContext.current
@@ -46,26 +42,26 @@ fun HomeColumnItem(
         var shouldDismiss = true
         if (it == DismissValue.DismissedToStart) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            viewModel.deleteList(parentListWithSubLists.parentList)
+            viewModel.deleteList(sublist)
         }
         if (it == DismissValue.DismissedToEnd) {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            val newList = parentListWithSubLists.parentList.copy()
+            val newList = sublist.copy()
             newList.isComplete = !newList.isComplete
 
-            viewModel.updateParentList(newList)
+            viewModel.updateSubList(newList)
             shouldDismiss = false
         }
         shouldDismiss
     }) {
-        var textStyle = when (parentListWithSubLists.parentList.isComplete) {
+        var textStyle = when (sublist.isComplete) {
             true -> MaterialTheme.typography.titleLarge.copy(textDecoration = TextDecoration.LineThrough)
             false -> MaterialTheme.typography.titleLarge
         }
 
-        if (parentListWithSubLists.subLists.isNotEmpty()) {
-            textStyle = textStyle.copy(fontWeight = FontWeight.Bold)
-        }
+//        if (parentListWithSubLists.subLists.isNotEmpty()) {
+//            textStyle = textStyle.copy(fontWeight = FontWeight.Bold)
+//        }
 
         Box(
             modifier = Modifier
@@ -78,8 +74,8 @@ fun HomeColumnItem(
                             context,
                             ListDetailActivity::class.java
                         )
-                        intent.putExtra("parentListId", parentListWithSubLists.parentList.id);
-                        context.startActivity(intent)
+                        //intent.putExtra("parentListId", parentListWithSubLists.parentList.id);
+                        //context.startActivity(intent)
                     },
                     onLongClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -88,34 +84,34 @@ fun HomeColumnItem(
                 )
         ) {
             ListItem(
-                color = parentListWithSubLists.parentList.color.getColor(),
-                label = parentListWithSubLists.parentList.name ?: "List",
+                color = sublist.color.getColor(),
+                label = sublist.name ?: "List",
                 style = textStyle,
             ) {
-                if (parentListWithSubLists.parentList.isComplete) {
+                if (sublist.isComplete) {
                     Icon(Icons.Default.Done, "Done", tint = MarkCompleted)
                 } else {
-                    NumberOfItemsChip(
-                        displayNumber = parentListWithSubLists.subLists.filter { !it.isComplete }.size.toString(),
-                        color = ItemColor,
-                        textColor = onItemColor
-                    )
+//                    NumberOfItemsChip(
+//                        displayNumber = parentListWithSubLists.subLists.filter { !it.isComplete }.size.toString(),
+//                        color = ItemColor,
+//                        textColor = onItemColor
+//                    )
                 }
             }
         }
         AddEditListDialog(
             showEditListDialog,
             label = "Edit List",
-            currentName = parentListWithSubLists.parentList.name,
-            currentColor = parentListWithSubLists.parentList.color
+            currentName = sublist.name,
+            currentColor = sublist.color
         ) { newListName, newListColor, newTextColor ->
             val editedList =
-                parentListWithSubLists.parentList.copy(name = newListName, color = newListColor)
+                sublist.copy(name = newListName, color = newListColor)
             newTextColor?.let {
                 editedList.textColor = it
             }
 
-            viewModel.updateParentList(editedList)
+            viewModel.updateSubList(editedList)
             showEditListDialog.value = false
         }
     }

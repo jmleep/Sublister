@@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import dev.jordanleeper.sublister.data.ParentList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.theme.getColor
 
 @Composable
 fun ListDetailAppBar(
     showAddListDialog: MutableState<Boolean>,
     textColor: Color,
-    list: ParentList?
+    list: Sublist?
 ) {
     TopAppBar(
         actions = {

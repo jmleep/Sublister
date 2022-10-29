@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.jordanleeper.sublister.data.Item
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
-import dev.jordanleeper.sublister.data.SubList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.theme.getColor
 import java.util.*
 
@@ -25,7 +25,7 @@ import java.util.*
 fun AddTask(
     text: MutableState<String>,
     viewModel: ParentListActivityViewModel,
-    subList: SubList,
+    subList: Sublist,
     itemsList: List<Item>
 ) {
     val haptic = LocalHapticFeedback.current
@@ -68,7 +68,7 @@ fun AddTask(
                         viewModel.addItem(
                             Item(
                                 name = text.value,
-                                subListId = subList.id,
+                                sublistId = subList.id,
                                 dateCreated = Date().time,
                                 position = itemsList.size + 1
                             )

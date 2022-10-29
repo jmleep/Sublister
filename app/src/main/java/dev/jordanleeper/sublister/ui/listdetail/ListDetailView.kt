@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
-import dev.jordanleeper.sublister.data.SubList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.button.AddListFloatingActionButton
 import dev.jordanleeper.sublister.ui.button.AddTaskFloatingActionButton
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
@@ -27,8 +27,9 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
-    val parentList by viewModel.getParentList(id).observeAsState()
-    val subLists by viewModel.getSubListsByParentId(id).observeAsState(initial = listOf())
+    val sublist by viewModel.getSublist(id).observeAsState()
+    val childLists by viewModel.getChildSublistsByParentSublistId(id)
+        .observeAsState(initial = listOf())
     val showAddListDialog = remember { mutableStateOf(false) }
     val showEditListDialog = remember {
         mutableStateOf(false)
@@ -40,31 +41,31 @@ fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
     val currentlyEditingSublistColor = remember {
         mutableStateOf("")
     }
-    var currentlyEditingSublist: SubList? = null
-    val itemTextColor = parentList?.textColor?.getColor() ?: Color.White
-    val palette = parentList?.color?.getPalette() ?: parentListPalette
+    var currentlyEditingSublist: Sublist? = null
+    val itemTextColor = sublist?.textColor?.getColor() ?: Color.White
+    val palette = sublist?.color?.getPalette() ?: parentListPalette
 
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(
-        color = parentList?.color?.getColor() ?: MaterialTheme.colorScheme.primary
+        color = sublist?.color?.getColor() ?: MaterialTheme.colorScheme.primary
     )
 
     SublisterTheme {
         Scaffold(
             topBar = {
-                ListDetailAppBar(showAddListDialog, itemTextColor, parentList)
+                ListDetailAppBar(showAddListDialog, itemTextColor, sublist)
             },
             floatingActionButton = {
                 Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
                     AddTaskFloatingActionButton(
                         showAddListDialog,
-                        parentList?.color?.getColor(),
-                        parentList?.textColor?.getColor()
+                        sublist?.color?.getColor(),
+                        sublist?.textColor?.getColor()
                     )
                     AddListFloatingActionButton(
                         showAddListDialog,
-                        parentList?.color?.getColor() ?: MaterialTheme.colorScheme.primary,
-                        parentList?.textColor?.getColor() ?: MaterialTheme.colorScheme.onPrimary
+                        sublist?.color?.getColor() ?: MaterialTheme.colorScheme.primary,
+                        sublist?.textColor?.getColor() ?: MaterialTheme.colorScheme.onPrimary
                     )
                 }
 
@@ -77,7 +78,7 @@ fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     LazyColumn() {
-                        items(subLists, key = { it.hashCode() }) {
+                        items(childLists, key = { it.hashCode() }) {
                             ListDetailColumnItem(
                                 viewModel = viewModel,
                                 subList = it,
@@ -96,11 +97,11 @@ fun ListDetailView(id: Int, viewModel: ParentListActivityViewModel) {
                     label = "Add SubList",
                 ) { newListName, newListColor, newTextColor ->
                     viewModel.addSubList(
-                        SubList(
+                        Sublist(
                             name = newListName,
                             color = newListColor,
                             textColor = newTextColor ?: White,
-                            parentListId = parentList?.id ?: 0,
+                            parentListId = sublist?.id ?: -1,
                             dateCreated = Date().time,
                             isComplete = false
                         )

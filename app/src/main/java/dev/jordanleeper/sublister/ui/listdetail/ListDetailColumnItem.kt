@@ -20,7 +20,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextDecoration
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
-import dev.jordanleeper.sublister.data.SubList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.listitem.ListItem
 import dev.jordanleeper.sublister.ui.listitem.NumberOfItemsChip
 import dev.jordanleeper.sublister.ui.swipe.ListItemSwipeToDismiss
@@ -34,7 +34,7 @@ import dev.jordanleeper.sublister.ui.theme.getColor
 @Composable
 fun ListDetailColumnItem(
     viewModel: ParentListActivityViewModel,
-    subList: SubList,
+    subList: Sublist,
     editList: () -> Unit
 ) {
     val isExpanded = remember { mutableStateOf(false) }

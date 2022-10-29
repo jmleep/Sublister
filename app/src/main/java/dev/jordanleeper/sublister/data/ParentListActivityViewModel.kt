@@ -16,27 +16,27 @@ class ParentListActivityViewModel(application: Application) : AndroidViewModel(a
         repository = ListRepository(listDao)
     }
 
-    fun getParentList(id: Int): LiveData<ParentList> {
-        return repository.getParentListById(id)
+    fun getSublist(id: Int): LiveData<Sublist> {
+        return repository.getSublistById(id);
     }
 
-    fun getSubListsByParentId(id: Int): LiveData<List<SubList>> {
-        return repository.getSubListsByParentId(id)
+    fun getChildSublistsByParentSublistId(id: Int): LiveData<List<Sublist>> {
+        return repository.getChildSublistsByParentSublistId(id)
     }
 
-    fun addSubList(list: SubList) {
+    fun addSubList(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addSubList(list)
+            repository.addSublist(list)
         }
     }
 
-    fun updateSubList(list: SubList) {
+    fun updateSubList(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateSubList(list)
         }
     }
 
-    fun deleteSubList(list: SubList) {
+    fun deleteSubList(list: Sublist) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteSubList(list)
         }

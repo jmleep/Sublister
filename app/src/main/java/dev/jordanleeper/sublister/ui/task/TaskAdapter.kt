@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.jordanleeper.sublister.R
 import dev.jordanleeper.sublister.data.Item
 import dev.jordanleeper.sublister.data.ParentListActivityViewModel
-import dev.jordanleeper.sublister.data.SubList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.theme.getColor
 import java.util.*
 
@@ -23,7 +23,7 @@ import java.util.*
 class TaskAdapter
     (
     private var items: List<Item>,
-    private val subList: SubList,
+    private val subList: Sublist,
     private val viewModel: ParentListActivityViewModel,
     private val colorScheme: ColorScheme
 ) :

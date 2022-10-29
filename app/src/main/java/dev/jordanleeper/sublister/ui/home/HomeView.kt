@@ -11,7 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import dev.jordanleeper.sublister.data.MainActivityViewModel
-import dev.jordanleeper.sublister.data.ParentList
+import dev.jordanleeper.sublister.data.Sublist
 import dev.jordanleeper.sublister.ui.button.AddListFloatingActionButton
 import dev.jordanleeper.sublister.ui.dialog.AddEditListDialog
 import dev.jordanleeper.sublister.ui.theme.SublisterTheme
@@ -21,7 +21,7 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainActivityView(viewModel: MainActivityViewModel) {
-    val parentListWithSubLists by viewModel.readAllData.observeAsState(initial = listOf())
+    val sublists by viewModel.readAllData.observeAsState(initial = listOf())
     val showAddListDialog = remember { mutableStateOf(false) }
 
     SublisterTheme {
@@ -40,8 +40,8 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                     showAddListDialog,
                     label = "Add List",
                 ) { newListName, newListColor, newTextColor ->
-                    viewModel.addList(
-                        ParentList(
+                    viewModel.addSublist(
+                        Sublist(
                             name = newListName,
                             color = newListColor,
                             textColor = newTextColor ?: White,
@@ -57,8 +57,8 @@ fun MainActivityView(viewModel: MainActivityViewModel) {
                         .fillMaxSize()
                 ) {
                     items(
-                        parentListWithSubLists,
-                        key = { it.parentList.hashCode() }) { it ->
+                        sublists,
+                        key = { it.hashCode() }) {
                         HomeColumnItem(it, viewModel)
                     }
 
