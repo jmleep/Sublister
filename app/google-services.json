@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "424588127433",
+    "project_id": "sublister-11cee",
+    "storage_bucket": "sublister-11cee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424588127433:android:6466aa73f525ae5a0cb118",
+        "android_client_info": {
+          "package_name": "dev.jordanleeper.sublister"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424588127433-uirktiojq40peange5pbngehec6ahroo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_e31YwFkO1-rInKJ2Jzkcu1HvXaEvaaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424588127433-uirktiojq40peange5pbngehec6ahroo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
